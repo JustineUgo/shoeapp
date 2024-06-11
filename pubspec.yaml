@@ -1,0 +1,42 @@
+name: shoesly
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  auto_route_generator: ^8.0.0
+  build_runner: ^2.4.9
+  flutter_launcher_icons: "^0.13.1"
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^2.5.2
+  golden_toolkit: ^0.15.0
+  injectable_generator: ^2.6.1
+  json_serializable: ^6.8.0
+  mocktail: ^1.0.3
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/icon.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/fonts/
+    - assets/svgs/
+
