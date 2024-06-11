@@ -1,7 +1,7 @@
 name: shoesly
-description: "A new Flutter project."
+description: "Code test for Shoesly."
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' 
 
 version: 1.0.0+1
 
@@ -9,9 +9,24 @@ environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
+  auto_route: ^8.0.3
+  bloc: ^8.1.4
+  bloc_test: ^9.1.7
+  cupertino_icons: ^1.0.6
+  dio: ^5.4.3+1
+  fancy_shimmer_image: ^2.0.3
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
+  flutter_bloc: ^8.1.5
+  flutter_svg: ^2.0.10+1
+  freezed_annotation: ^2.4.1
+  get_it: ^7.7.0
+  get_it_mixin: ^4.2.2
+  injectable: ^2.4.1
+  intl: ^0.18.1
+  json_annotation: ^4.9.0
+  shared_preferences: ^2.2.3
+  toastification: ^2.0.0
 
 dev_dependencies:
   auto_route_generator: ^8.0.0
@@ -39,4 +54,53 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/svgs/
+
+  fonts:
+    - family: urbanist
+      fonts:
+        - asset: assets/fonts/Urbanist-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Urbanist-ThinItalic.ttf
+          style: italic
+          weight: 100
+        - asset: assets/fonts/Urbanist-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Urbanist-ExtraLightItalic.ttf
+          style: italic
+          weight: 200
+        - asset: assets/fonts/Urbanist-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Urbanist-LightItalic.ttf
+          style: italic
+          weight: 300
+        - asset: assets/fonts/Urbanist-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Urbanist-Italic.ttf
+          style: italic
+          weight: 400
+        - asset: assets/fonts/Urbanist-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Urbanist-MediumItalic.ttf
+          style: italic
+          weight: 500
+        - asset: assets/fonts/Urbanist-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Urbanist-SemiBoldItalic.ttf
+          style: italic
+          weight: 600
+        - asset: assets/fonts/Urbanist-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Urbanist-BoldItalic.ttf
+          style: italic
+          weight: 700
+        - asset: assets/fonts/Urbanist-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Urbanist-ExtraBoldItalic.ttf
+          style: italic
+          weight: 800
+        - asset: assets/fonts/Urbanist-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Urbanist-BlackItalic.ttf
+          style: italic
+          weight: 900
 
