@@ -22,9 +22,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return ShoeslyBackground(
       title: '',
-      trailingIcon: GestureDetector(
-        onTap: ()=> context.router.push(const CartRoute()),
-        child: SvgPicture.asset(ShoeslyIcons.cartIcon)),
+      trailingIcon: GestureDetector(onTap: () => context.router.push(const CartRoute()), child: SvgPicture.asset(ShoeslyIcons.cartIcon)),
       footer: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -36,7 +34,13 @@ class _ProductScreenState extends State<ProductScreen> {
               const Text('\$235.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
-          ElevatedButton(onPressed: () {}, child: const Text('ADD TO CART', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)))
+          ElevatedButton(
+            onPressed: () {},
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+              child: Text('ADD TO CART', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            ),
+          ),
         ],
       ),
       content: [

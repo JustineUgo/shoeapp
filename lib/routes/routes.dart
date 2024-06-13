@@ -11,5 +11,6 @@ class ShoeslyRouter extends $ShoeslyRouter {
     AutoRoute(page: FilterRoute.page, path: '/filter'),
     AutoRoute(page: ReviewRoute.page, path: '/reviews'),
     AutoRoute(page: CartRoute.page, path: '/cart'),
+    AutoRoute(page: CheckoutRoute.page, path: '/checkout'),
   ];
 }

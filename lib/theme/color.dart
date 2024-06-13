@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ShoeslyColors {
-  
+  static Color grey = const Color(0xFF666666);
+
   static const MaterialColor primaryNeutral = MaterialColor(0xFF101010, <int, Color>{
     50: Color(0xFFFFFFFF),
     100: Color(0xFFF3F3F3),
@@ -26,7 +27,7 @@ class ShoeslyColors {
     800: Color(0xFF1A6D66),
     900: Color(0xFF0F595A),
   });
-  
+
   static const MaterialColor error = MaterialColor(0xFFFF4C5E, <int, Color>{
     100: Color(0xFFFFE4DB),
     200: Color(0xFFFFC3B7),
@@ -38,7 +39,7 @@ class ShoeslyColors {
     800: Color(0xFF931846),
     900: Color(0xFF7A0E40),
   });
-  
+
   static const MaterialColor warning = MaterialColor(0xFFffbd16, <int, Color>{
     100: Color(0xFFFFF7D0),
     200: Color(0xFFFFECA1),
@@ -50,7 +51,7 @@ class ShoeslyColors {
     800: Color(0xFF935F07),
     900: Color(0xFF7A4B04),
   });
-  
+
   static const MaterialColor brand = MaterialColor(0xFF56CCF2, <int, Color>{
     100: Color(0xFFDDFEFD),
     200: Color(0xFFBCFBFD),
@@ -62,7 +63,7 @@ class ShoeslyColors {
     800: Color(0xFF1B588C),
     900: Color(0xFF103F74),
   });
-  
+
   static const MaterialColor information = MaterialColor(0xFF2952CC, <int, Color>{
     100: Color(0xFFD4E2FC),
     200: Color(0xFFAAC4F9),
@@ -74,6 +75,4 @@ class ShoeslyColors {
     800: Color(0xFF0D1F76),
     900: Color(0xFF071561),
   });
-
 }
-

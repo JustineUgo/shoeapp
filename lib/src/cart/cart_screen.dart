@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/routes/routes.gr.dart';
 import 'package:shoesly/src/cart/widget/cart_tile.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
-import 'package:shoesly/util/assets.dart';
 
 @RoutePage()
 class CartScreen extends StatefulWidget {
@@ -31,7 +29,13 @@ class _CartScreenState extends State<CartScreen> {
               const Text('\$705.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
-          ElevatedButton(onPressed: () {}, child: const Text('CHECK OUT', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)))
+          ElevatedButton(
+            onPressed: () => context.router.push(const CheckoutRoute()),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+              child: Text('CHECK OUT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            ),
+          )
         ],
       ),
       content: [
