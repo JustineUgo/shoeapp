@@ -5,11 +5,12 @@ import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
 class ShoeslyBackground extends StatefulWidget {
-  const ShoeslyBackground({super.key, required this.title, required this.content, this.footer, this.trailingIcon});
+  const ShoeslyBackground({super.key, required this.title, required this.content, this.footer, this.trailingIcon, this.padding});
   final String title;
   final List<Widget> content;
   final Widget? footer;
   final Widget? trailingIcon;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<ShoeslyBackground> createState() => _ShoeslyBackgroundState();
@@ -24,7 +25,7 @@ class _ShoeslyBackgroundState extends State<ShoeslyBackground> {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: widget.padding?? const EdgeInsets.symmetric(horizontal: 30),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
