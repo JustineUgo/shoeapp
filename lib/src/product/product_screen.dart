@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
+import 'package:shoesly/routes/routes.gr.dart';
+import 'package:shoesly/src/product/widget/review_tile.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
@@ -147,45 +149,9 @@ class _ProductScreenState extends State<ProductScreen> {
         const SizedBox(height: 30),
         const Text('Review (1045)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 10),
-        ...List.generate(
-            3,
-            (index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CircleAvatar(),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Nolan Carder', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                Text('Today', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              children: List.generate(
-                                  5,
-                                  (index) => Padding(
-                                        padding: const EdgeInsets.only(right: 5),
-                                        child: SvgPicture.asset(ShoeslyIcons.rateIcon),
-                                      )),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text('Perfect for keeping your feet dry and warm in damp conditions. ', style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+        ...List.generate(3, (index) => const ReviewTile()),
         TextButton(
-          onPressed: () {},
+          onPressed: () => context.router.push(const ReviewRoute()),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -20,7 +20,7 @@ class Product with _$Product {
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);
 
-  factory  Product.fixture() => const Product(
+  factory Product.fixture() => const Product(
         id: 'id',
         name: 'Jordan 1 Retro High Tie Dye',
         image: 'image',
