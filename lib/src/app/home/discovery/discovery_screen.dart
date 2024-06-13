@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
-import 'package:shoesly/src/home/discovery/widgets/product_widget.dart';
+import 'package:shoesly/src/app/home/discovery/widgets/product_widget.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 

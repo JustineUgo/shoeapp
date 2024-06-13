@@ -13,6 +13,13 @@ class ShoeslyIcons {
   static const String deleteIcon = 'assets/svgs/trash_icon.svg';
   static const String checkIcon = 'assets/svgs/tick_circle.svg';
   static const String rectIcon = 'assets/svgs/rect.svg';
+
+  static const String home = 'assets/svgs/home.svg';
+  static const String homeSelected = 'assets/svgs/home_selected.svg';
+  static const String order = 'assets/svgs/order.svg';
+  static const String orderSelected = 'assets/svgs/order_selected.svg';
+  static const String wishlist = 'assets/svgs/wishlist.svg';
+  static const String wishlistSelected = 'assets/svgs/wishlist_selected.svg';
 }
 
 class ShoeslyImages {
