@@ -8,6 +8,9 @@ class ShoeslyIcons {
   static const String backIcon = 'assets/svgs/arrow_left.svg';
   static const String brand = 'assets/svgs/brand_icon.svg';
   static const String star = 'assets/svgs/star.svg';
+  static const String cartPlusIcon = 'assets/svgs/add_circle_icon.svg';
+  static const String cartMinusIcon = 'assets/svgs/minus_circle_icon.svg';
+  static const String deleteIcon = 'assets/svgs/trash_icon.svg';
 }
 
 class ShoeslyImages {
