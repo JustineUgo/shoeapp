@@ -26,6 +26,7 @@ class _CartScreenState extends State<CartScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Grand Total', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
+              const SizedBox(height: 5),
               const Text('\$705.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),

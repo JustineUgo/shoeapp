@@ -25,6 +25,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Grand Total', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
+              const SizedBox(height: 5),
               const Text('\$705.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
@@ -32,7 +33,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               onPressed: () {},
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
-                child:  Text('PAYMENT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                child: Text('PAYMENT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
               ))
         ],
       ),

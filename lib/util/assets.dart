@@ -11,6 +11,8 @@ class ShoeslyIcons {
   static const String cartPlusIcon = 'assets/svgs/add_circle_icon.svg';
   static const String cartMinusIcon = 'assets/svgs/minus_circle_icon.svg';
   static const String deleteIcon = 'assets/svgs/trash_icon.svg';
+  static const String checkIcon = 'assets/svgs/tick_circle.svg';
+  static const String rectIcon = 'assets/svgs/rect.svg';
 }
 
 class ShoeslyImages {
