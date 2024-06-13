@@ -8,5 +8,6 @@ class ShoeslyRouter extends $ShoeslyRouter {
     RedirectRoute(path: '/', redirectTo: '/discovery'),
     AutoRoute(page: DiscoveryRoute.page, path: '/discovery'),
     AutoRoute(page: ProductRoute.page, path: '/product'),
+    AutoRoute(page: FilterRoute.page, path: '/filter'),
   ];
 }

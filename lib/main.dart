@@ -9,11 +9,12 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.white, statusBarIconBrightness: Brightness.dark));
   configureDependencies();
-  runApp( MyApp());
+  runApp( Shoesly());
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+// ignore: must_be_immutable
+class Shoesly extends StatelessWidget {
+  Shoesly({super.key});
   var routerConfig = getIt<ShoeslyRouter>().config();
   @override
   Widget build(BuildContext context) {

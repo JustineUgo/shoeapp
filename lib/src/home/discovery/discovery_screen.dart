@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
+import 'package:shoesly/src/home/discovery/widgets/product_widget.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
@@ -29,7 +29,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ElevatedButton(
-        onPressed: () {},
+        onPressed: () => context.router.push(const FilterRoute()),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -87,66 +87,13 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                   childAspectRatio: .68,
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   children: List.generate(20, (index) {
-                    return const ProductWidget();
+                    return ProductWidget(product: Product.fixture());
                   }),
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProductWidget extends StatelessWidget {
-  const ProductWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.router.push(ProductRoute(product: Product.fixture())),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 15, bottom: 22, left: 15, right: 15),
-            height: (MediaQuery.of(context).size.width - 75) / 2,
-            decoration: BoxDecoration(
-              color: ShoeslyColors.primaryNeutral.shade200,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [SvgPicture.asset(ShoeslyIcons.brand), SvgPicture.asset(ShoeslyIcons.wishlistIcon)],
-                ),
-                Image.asset(
-                  ShoeslyImages.shoe,
-                  fit: BoxFit.fitWidth,
-                  width: (MediaQuery.of(context).size.width - 75) / 2,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text('Jordan 1 Retro High Tie Dye', style: TextStyle(fontSize: 12)),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              SvgPicture.asset(ShoeslyIcons.rateIcon),
-              const SizedBox(width: 1),
-              const Text('4.5', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
-              const SizedBox(width: 5),
-              Text('(1045 Reviews)', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
-            ],
-          ),
-          const Text('\$235,00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        ],
       ),
     );
   }
