@@ -5,6 +5,8 @@ class ShoeslyIcons {
   static const String rateIcon = 'assets/svgs/rate_icon.svg';
   static const String filterIcon = 'assets/svgs/filter.svg';
   static const String filterAppliedIcon = 'assets/svgs/filter_applied.svg';
+  static const String backIcon = 'assets/svgs/arrow_left.svg';
+  static const String brand = 'assets/svgs/brand_icon.svg';
 }
 
 class ShoeslyImages {

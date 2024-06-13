@@ -1,7 +1,7 @@
 name: shoesly
 description: "Code test for Shoesly."
 
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -22,6 +22,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   get_it: ^7.7.0
   get_it_mixin: ^4.2.2
+  image: ^4.2.0
   injectable: ^2.4.1
   intl: ^0.18.1
   json_annotation: ^4.9.0
@@ -103,4 +104,3 @@ flutter:
         - asset: assets/fonts/Urbanist-BlackItalic.ttf
           style: italic
           weight: 900
-

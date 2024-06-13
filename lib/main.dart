@@ -9,18 +9,18 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.white, statusBarIconBrightness: Brightness.dark));
   configureDependencies();
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  var routerConfig = getIt<ShoeslyRouter>().config();
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ShoeslyTheme.themeData,
-      routerConfig: getIt<ShoeslyRouter>().config(),
+      routerConfig: routerConfig,
     );
   }
 }

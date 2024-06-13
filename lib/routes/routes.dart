@@ -7,5 +7,6 @@ class ShoeslyRouter extends $ShoeslyRouter {
   List<AutoRoute> get routes => [
     RedirectRoute(path: '/', redirectTo: '/discovery'),
     AutoRoute(page: DiscoveryRoute.page, path: '/discovery'),
+    AutoRoute(page: ProductRoute.page, path: '/product'),
   ];
 }
