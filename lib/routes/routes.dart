@@ -5,8 +5,8 @@ import 'package:shoesly/routes/routes.gr.dart';
 class ShoeslyRouter extends $ShoeslyRouter {
   @override
   List<AutoRoute> get routes => [
-        RedirectRoute(path: '/', redirectTo: '/discovery'),
-
+        RedirectRoute(path: '/', redirectTo: '/auth'),
+        AutoRoute(page: AuthRoute.page, path: '/auth'),
         AutoRoute(
           page: AppRoute.page,
           path: '/discovery',
@@ -16,7 +16,6 @@ class ShoeslyRouter extends $ShoeslyRouter {
             AutoRoute(page: WishlistRoute.page, path: 'wishlist'),
           ],
         ),
-
         AutoRoute(page: ProductRoute.page, path: '/product'),
         AutoRoute(page: FilterRoute.page, path: '/filter'),
         AutoRoute(page: ReviewRoute.page, path: '/reviews'),

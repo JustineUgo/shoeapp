@@ -25,7 +25,7 @@ class _ShoeslyBackgroundState extends State<ShoeslyBackground> {
           children: [
             Expanded(
               child: Padding(
-                padding: widget.padding?? const EdgeInsets.symmetric(horizontal: 30),
+                padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 30),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class _ShoeslyBackgroundState extends State<ShoeslyBackground> {
                           children: [
                             IconButton(onPressed: () => context.router.removeLast(), icon: SvgPicture.asset(ShoeslyIcons.backIcon)),
                             Text(widget.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                            widget.trailingIcon ?? Opacity(opacity: 0, child: SvgPicture.asset(ShoeslyIcons.cartIcon)),
+                            widget.trailingIcon ?? Opacity(opacity: 0, child: IconButton(onPressed: () {}, icon: SvgPicture.asset(ShoeslyIcons.cartIcon))),
                           ],
                         ),
                       ),
