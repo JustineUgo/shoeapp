@@ -10,6 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
+import 'package:shoesly/models/brand/brand.dart' as _i14;
 import 'package:shoesly/models/product/product.dart' as _i13;
 import 'package:shoesly/src/app/app.dart' as _i1;
 import 'package:shoesly/src/app/home/discovery/discovery_screen.dart' as _i5;
@@ -76,6 +77,7 @@ abstract class $ShoeslyRouter extends _i11.RootStackRouter {
         child: _i8.ProductScreen(
           key: args.key,
           product: args.product,
+          brand: args.brand,
         ),
       );
     },
@@ -198,12 +200,14 @@ class ProductRoute extends _i11.PageRouteInfo<ProductRouteArgs> {
   ProductRoute({
     _i12.Key? key,
     required _i13.Product product,
+    required _i14.Brand brand,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           ProductRoute.name,
           args: ProductRouteArgs(
             key: key,
             product: product,
+            brand: brand,
           ),
           initialChildren: children,
         );
@@ -218,15 +222,18 @@ class ProductRouteArgs {
   const ProductRouteArgs({
     this.key,
     required this.product,
+    required this.brand,
   });
 
   final _i12.Key? key;
 
   final _i13.Product product;
 
+  final _i14.Brand brand;
+
   @override
   String toString() {
-    return 'ProductRouteArgs{key: $key, product: $product}';
+    return 'ProductRouteArgs{key: $key, product: $product, brand: $brand}';
   }
 }
 

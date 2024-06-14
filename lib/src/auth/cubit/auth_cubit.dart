@@ -61,7 +61,6 @@ class AuthCubit {
         'email': user.email,
         'image': user.photoURL,
         'wishlist': [],
-        'orders': [],
       });
     }
   }

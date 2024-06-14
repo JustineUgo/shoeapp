@@ -5,11 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class FirebaseService {
-  Future<void> createDocument({required String collection, required String docId, required Map<String, dynamic> userData});
+  Future<void> setDocument({required String collection, required String docId, required Map<String, dynamic> userData});
+  Future<void> createDocument({required String collection, required Map<String, dynamic> userData});
   Future<DocumentSnapshot> getDocument({required String collection, required String docId});
   Future<void> updateDocument({required String collection, required String docId, required Map<String, dynamic> userData});
   Future<void> deleteDocument({required String collection, required String docId});
-  Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, DocumentReference? ref});
+  Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, Object? ref});
   Stream<DocumentSnapshot> getDocumentStream({required String collection, required String docId});
   String getUserId();
 }
@@ -22,8 +23,13 @@ class FirebaseServiceImpl implements FirebaseService {
   FirebaseServiceImpl(this.firestore, this.auth);
 
   @override
-  Future<void> createDocument({required String collection, required String docId, required Map<String, dynamic> userData}) async {
+  Future<void> setDocument({required String collection, required String docId, required Map<String, dynamic> userData}) async {
     await firestore.collection(collection).doc(docId).set(userData);
+  }
+
+  @override
+  Future<void> createDocument({required String collection, required Map<String, dynamic> userData}) async {
+    await firestore.collection(collection).add(userData);
   }
 
   @override
@@ -42,7 +48,7 @@ class FirebaseServiceImpl implements FirebaseService {
   }
 
   @override
-  Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, DocumentReference? ref}) {
+  Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, Object? ref}) {
     return ref != null && filterField != null
         ? firestore.collection(collection).where(filterField, isEqualTo: ref).snapshots()
         : firestore.collection(collection).snapshots();

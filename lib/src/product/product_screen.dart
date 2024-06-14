@@ -1,75 +1,40 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/injection/injection.dart';
+import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
+import 'package:shoesly/services/firebase_service.dart';
+import 'package:shoesly/src/product/widget/add_to_cart_sheet.dart';
 import 'package:shoesly/src/product/widget/review_tile.dart';
+import 'package:shoesly/src/product/widget/to_cart_sheet.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
 @RoutePage()
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key, required this.product});
+  const ProductScreen({super.key, required this.product, required this.brand});
   final Product product;
+  final Brand brand;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  final firebaseService = getIt<FirebaseService>();
+  String? color;
+  int? size;
+
+  bool isAddingToCart = false;
   void toCart() {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(30),
-            decoration: BoxDecoration(
-              color: ShoeslyColors.primaryNeutral.shade50,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Wrap(
-              children: [
-                Column(
-                  children: [
-                    SvgPicture.asset(ShoeslyIcons.checkIcon),
-                    const SizedBox(height: 20),
-                    const Text('Added to cart', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 5),
-                    Text('1 Item Total', style: TextStyle(fontSize: 14, color: ShoeslyColors.primaryNeutral.shade400)),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
-                              child: Text('BACK EXPLORE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              context.router.push(const CartRoute());
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
-                              child: Text('TO CART', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+          return const ToCartSheet();
         });
   }
 
@@ -78,86 +43,30 @@ class _ProductScreenState extends State<ProductScreen> {
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 10),
-            decoration: BoxDecoration(
-              color: ShoeslyColors.primaryNeutral.shade50,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Wrap(
-              children: [
-                Column(
-                  children: [
-                    SvgPicture.asset(ShoeslyIcons.rectIcon),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Add to cart', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: const Padding(
-                              padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
-                              child: Icon(Icons.close),
-                            )),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Quantity', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Expanded(child: Text('1', style: TextStyle(fontSize: 14))),
-                            Row(
-                              children: [
-                                SvgPicture.asset(ShoeslyIcons.cartMinusIcon),
-                                const SizedBox(width: 20),
-                                SvgPicture.asset(ShoeslyIcons.cartPlusIcon),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Divider(color: ShoeslyColors.primaryNeutral),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total Price', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
-                              const SizedBox(height: 5),
-                              const Text('\$235.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              toCart();
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
-                              child: Text('ADD TO CART', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          return AddToCartSheet(
+            amount: widget.product.amount,
+            onAddToCart: ({required price, required quantity}) {
+              setState(() => isAddingToCart = true);
+              firebaseService.createDocument(collection: 'cart', userData: {
+                'userId': firebaseService.getUserId(),
+                'productId': widget.product.id,
+                'quantity': quantity,
+                'color': color,
+                'size': size,
+                'brand': widget.brand.name,
+                'itemPrice': widget.product.amount,
+              }).onError((error, stackTrace) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Failed to add product to cart')),
+                );
+
+                setState(() => isAddingToCart = false);
+              }).then((value) {
+                toCart();
+
+                setState(() => isAddingToCart = false);
+              });
+            },
           );
         });
   }
@@ -179,13 +88,16 @@ class _ProductScreenState extends State<ProductScreen> {
               Text('\$${widget.product.amount}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
-          ElevatedButton(
-            onPressed: () => addToCart(),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-              child: Text('ADD TO CART', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          if (isAddingToCart)
+            const Center(child: CircularProgressIndicator())
+          else
+            ElevatedButton(
+              onPressed: () => addToCart(),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                child: Text('ADD TO CART', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+              ),
             ),
-          ),
         ],
       ),
       content: [
