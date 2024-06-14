@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product.freezed.dart';
@@ -16,6 +16,8 @@ class Product with _$Product {
     required Gender gender,
     required List<double> sizes,
     required List<String> colors,
+    required DateTime createdAt,
+    @Default(false) isBookmarked, 
 
     //colors, sizes, reviews
   }) = _Product;

@@ -20,6 +20,8 @@ _$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       colors:
           (json['colors'] as List<dynamic>).map((e) => e as String).toList(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      isBookmarked: json['isBookmarked'] ?? false,
     );
 
 Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
@@ -33,6 +35,8 @@ Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
       'gender': _$GenderEnumMap[instance.gender]!,
       'sizes': instance.sizes,
       'colors': instance.colors,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'isBookmarked': instance.isBookmarked,
     };
 
 const _$GenderEnumMap = {

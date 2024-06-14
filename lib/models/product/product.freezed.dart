@@ -29,6 +29,8 @@ mixin _$Product {
   Gender get gender => throw _privateConstructorUsedError;
   List<double> get sizes => throw _privateConstructorUsedError;
   List<String> get colors => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  dynamic get isBookmarked => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +51,9 @@ abstract class $ProductCopyWith<$Res> {
       String description,
       Gender gender,
       List<double> sizes,
-      List<String> colors});
+      List<String> colors,
+      DateTime createdAt,
+      dynamic isBookmarked});
 }
 
 /// @nodoc
@@ -74,6 +78,8 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? gender = null,
     Object? sizes = null,
     Object? colors = null,
+    Object? createdAt = null,
+    Object? isBookmarked = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -112,6 +118,14 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      isBookmarked: freezed == isBookmarked
+          ? _value.isBookmarked
+          : isBookmarked // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -132,7 +146,9 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String description,
       Gender gender,
       List<double> sizes,
-      List<String> colors});
+      List<String> colors,
+      DateTime createdAt,
+      dynamic isBookmarked});
 }
 
 /// @nodoc
@@ -155,6 +171,8 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? gender = null,
     Object? sizes = null,
     Object? colors = null,
+    Object? createdAt = null,
+    Object? isBookmarked = freezed,
   }) {
     return _then(_$ProductImpl(
       id: null == id
@@ -193,6 +211,12 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value._colors
           : colors // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      isBookmarked:
+          freezed == isBookmarked ? _value.isBookmarked! : isBookmarked,
     ));
   }
 }
@@ -209,7 +233,9 @@ class _$ProductImpl implements _Product {
       required this.description,
       required this.gender,
       required final List<double> sizes,
-      required final List<String> colors})
+      required final List<String> colors,
+      required this.createdAt,
+      this.isBookmarked = false})
       : _sizes = sizes,
         _colors = colors;
 
@@ -247,8 +273,14 @@ class _$ProductImpl implements _Product {
   }
 
   @override
+  final DateTime createdAt;
+  @override
+  @JsonKey()
+  final dynamic isBookmarked;
+
+  @override
   String toString() {
-    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes, colors: $colors)';
+    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes, colors: $colors, createdAt: $createdAt, isBookmarked: $isBookmarked)';
   }
 
   @override
@@ -265,7 +297,11 @@ class _$ProductImpl implements _Product {
                 other.description == description) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             const DeepCollectionEquality().equals(other._sizes, _sizes) &&
-            const DeepCollectionEquality().equals(other._colors, _colors));
+            const DeepCollectionEquality().equals(other._colors, _colors) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            const DeepCollectionEquality()
+                .equals(other.isBookmarked, isBookmarked));
   }
 
   @JsonKey(ignore: true)
@@ -280,7 +316,9 @@ class _$ProductImpl implements _Product {
       description,
       gender,
       const DeepCollectionEquality().hash(_sizes),
-      const DeepCollectionEquality().hash(_colors));
+      const DeepCollectionEquality().hash(_colors),
+      createdAt,
+      const DeepCollectionEquality().hash(isBookmarked));
 
   @JsonKey(ignore: true)
   @override
@@ -306,7 +344,9 @@ abstract class _Product implements Product {
       required final String description,
       required final Gender gender,
       required final List<double> sizes,
-      required final List<String> colors}) = _$ProductImpl;
+      required final List<String> colors,
+      required final DateTime createdAt,
+      final dynamic isBookmarked}) = _$ProductImpl;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
 
@@ -328,6 +368,10 @@ abstract class _Product implements Product {
   List<double> get sizes;
   @override
   List<String> get colors;
+  @override
+  DateTime get createdAt;
+  @override
+  dynamic get isBookmarked;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>

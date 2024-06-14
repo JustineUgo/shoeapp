@@ -2,10 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DiscoveryCubit {
-  Future load() async {
-    final DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
+  Filter? filter;
 
-    final DocumentSnapshot userDocSnapshot = await userDocRef.get();
-    userDocSnapshot.data() as Map<String, Object?>;
-  }
+  // Future<void> _addToWishlist(String productId) async {
+  //   await firestoreService.updateDocument(
+  //     collection: 'users',
+  //     docId: widget.userId,
+  //     userData: {
+  //       'wishlist': FieldValue.arrayUnion([productId])
+  //     },
+  //   );
+  //   setState(() {
+  //     _wishlist.add(productId);
+  //   });
+  // }
+
+  // Future<void> _removeFromWishlist(String productId) async {
+  //   await firestoreService.updateDocument(
+  //     collection: 'users',
+  //     docId: widget.userId,
+  //     userData: {
+  //       'wishlist': FieldValue.arrayRemove([productId])
+  //     },
+  //   );
+  //   setState(() {
+  //     _wishlist.remove(productId);
+  //   });
+  // }
 }

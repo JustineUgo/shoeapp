@@ -5,8 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/models/product/product.dart';
+import 'package:shoesly/models/shoesly_user/shoesly_user.dart';
 import 'package:shoesly/routes/routes.gr.dart';
-import 'package:shoesly/services/firestore_service.dart';
+import 'package:shoesly/services/firebase_service.dart';
 import 'package:shoesly/src/app/home/discovery/widgets/product_widget.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
@@ -21,7 +22,7 @@ class DiscoveryScreen extends StatefulWidget {
 
 class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final ScrollController controller = ScrollController();
-  final firestoreService = getIt<FirestoreService>();
+  final firebaseService = getIt<FirebaseService>();
   BrandSegment segment = BrandSegment.all;
   String brandFilter = '';
 
@@ -68,7 +69,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: StreamBuilder<QuerySnapshot>(
-                    stream: firestoreService.getCollectionStream(collection: 'brands'),
+                    stream: firebaseService.getCollectionStream(collection: 'brands'),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Padding(
@@ -134,37 +135,56 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: firestoreService.getCollectionStream(
-                    collection: 'products',
-                    filterField: 'brand',
-                    ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
+              child: FutureBuilder<DocumentSnapshot>(
+                  future: firebaseService.getDocument(
+                    collection: 'users',
+                    docId: firebaseService.getUserId(),
                   ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Center(child: Text('Something went wrong'));
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    final data = snapshot.requireData;
+                    if (userSnapshot.hasError) {
+                      return const Center(child: Text('Something went wrong'));
+                    }
 
-                    return GridView.count(
-                      controller: controller,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 30,
-                      childAspectRatio: .68,
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      children: List.generate(data.size, (index) {
-                        Map<String, Object?> json = data.docs[index].data() as Map<String, Object?>;
-                        Product product = Product.fromJson(json);
-                        DocumentReference brand = json['brand'] as DocumentReference;
-                        return ProductWidget(product: product, brand: brand);
-                      }),
-                    );
+                    final userDoc = userSnapshot.data;
+                    ShoeslyUser user = ShoeslyUser.fromJson(userDoc!.data() as Map<String, Object?>);
+
+                    return StreamBuilder<QuerySnapshot>(
+                        stream: firebaseService.getCollectionStream(
+                          collection: 'products',
+                          filterField: 'brand',
+                          ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Center(child: Text('Something went wrong'));
+                          }
+
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          final data = snapshot.requireData;
+
+                          return GridView.count(
+                            controller: controller,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 30,
+                            childAspectRatio: .68,
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            children: List.generate(data.size, (index) {
+                              Map<String, Object?> json = data.docs[index].data() as Map<String, Object?>;
+                              Product product = Product.fromJson(json);
+                              product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
+                              DocumentReference brand = json['brand'] as DocumentReference;
+                              return ProductWidget(product: product, brand: brand);
+                            }),
+                          );
+                        });
                   }),
             ),
           ],

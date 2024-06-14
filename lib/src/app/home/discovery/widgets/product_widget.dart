@@ -44,8 +44,7 @@ class ProductWidget extends StatelessWidget {
                         return const SizedBox.shrink();
                       }),
                     ),
-                    // SvgPicture.asset(ShoeslyIcons.brand),
-                    SvgPicture.asset(ShoeslyIcons.wishlistIcon),
+                    SvgPicture.asset(product.isBookmarked ? ShoeslyIcons.wishlistSelected : ShoeslyIcons.wishlistIcon),
                   ],
                 ),
                 Image.network(
