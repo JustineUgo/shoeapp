@@ -25,6 +25,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final firebaseService = getIt<FirebaseService>();
   BrandSegment segment = BrandSegment.all;
   String brandFilter = '';
+  bool isRetrying = false;
 
   @override
   void dispose() {
@@ -51,6 +52,13 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
       );
     }
   }
+
+  void retryFetch() {
+    setState(() {
+      isRetrying = true;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text('Discover', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                  IconButton(onPressed: () => context.router.push(const CartRoute()), icon: SvgPicture.asset(ShoeslyIcons.cartIcon)),
+                  IconButton(
+                    onPressed: () => context.router.push(const CartRoute()),
+                    icon: SvgPicture.asset(ShoeslyIcons.cartIcon),
+                  ),
                 ],
               ),
             ),
@@ -89,127 +100,152 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: StreamBuilder<QuerySnapshot>(
-                    stream: firebaseService.getCollectionStream(collection: 'brands'),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Padding(
-                          padding: EdgeInsets.only(right: 20),
-                          child: Text(
-                            'All',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      }
-                      //TODO: shimmer
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      final data = snapshot.requireData;
-                      return Row(
+                  stream: firebaseService.getCollectionStream(collection: 'brands'),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Column(
                         children: [
-                          InkWell(
-                            onTap: () => setState(() => segment = BrandSegment.all),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Text(
-                                'All',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: segment == BrandSegment.all ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade300,
-                                ),
-                              ),
-                            ),
-                          ),
-                          ...data.docs.map(
-                            (doc) {
-                              Brand brand = Brand.fromJson(doc.data() as Map<String, Object?>);
-                              return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    segment = BrandSegment.brand;
-                                    brandFilter = doc.id;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Text(
-                                    brand.name,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: (segment != BrandSegment.all && brandFilter == doc.id)
-                                          ? ShoeslyColors.primaryNeutral
-                                          : ShoeslyColors.primaryNeutral.shade300,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                          Text('Error: ${snapshot.error}'),
+                          ElevatedButton(
+                            onPressed: retryFetch,
+                            child: const  Text('Retry'),
                           ),
                         ],
                       );
-                    }),
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting|| isRetrying) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final data = snapshot.requireData;
+                    return Row(
+                      children: [
+                        InkWell(
+                          onTap: () => setState(() => segment = BrandSegment.all),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Text(
+                              'All',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: segment == BrandSegment.all ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade300,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ...data.docs.map((doc) {
+                          Brand brand = Brand.fromJson(doc.data() as Map<String, Object?>);
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                segment = BrandSegment.brand;
+                                brandFilter = doc.id;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Text(
+                                brand.name,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: (segment != BrandSegment.all && brandFilter == doc.id)
+                                      ? ShoeslyColors.primaryNeutral
+                                      : ShoeslyColors.primaryNeutral.shade300,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 30),
             Expanded(
               child: StreamBuilder<DocumentSnapshot>(
-                  stream: firebaseService.getDocumentStream(
-                    collection: 'users',
-                    docId: firebaseService.getUserId(),
-                  ),
-                  builder: (context, userSnapshot) {
-                    if (userSnapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (userSnapshot.hasError) {
-                      return const Center(child: Text('Something went wrong'));
-                    }
-
-                    final userDoc = userSnapshot.data;
-                    ShoeslyUser user = ShoeslyUser.fromJson(userDoc!.data() as Map<String, Object?>);
-
-                    return StreamBuilder<QuerySnapshot>(
-                        stream: firebaseService.getCollectionStream(
-                          collection: 'products',
-                          filterField: 'brand',
-                          ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
+                stream: firebaseService.getDocumentStream(
+                  collection: 'users',
+                  docId: firebaseService.getUserId(),
+                ),
+                builder: (context, userSnapshot) {
+                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (userSnapshot.hasError) {
+                    return Center(child: Column(
+                      children: [
+                        Text('Error: ${userSnapshot.error}'),
+                        ElevatedButton(
+                          onPressed: retryFetch,
+                          child: const  Text('Retry'),
                         ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return const Center(child: Text('Something went wrong'));
-                          }
+                      ],
+                    ));
+                  }
 
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
+                  final userDoc = userSnapshot.data;
+                  ShoeslyUser user = ShoeslyUser.fromJson(userDoc!.data() as Map<String, Object?>);
 
-                          final data = snapshot.requireData;
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: firebaseService.getCollectionStream(
+                      collection: 'products',
+                      filterField: 'brand',
+                      ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {return Center(child: Column(
+                          children: [
+                            Text('Error: ${snapshot.error}'),
+                            ElevatedButton(
+                              onPressed: retryFetch,
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting|| isRetrying) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                          return GridView.count(
-                            controller: controller,
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 30,
-                            childAspectRatio: .68,
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            children: List.generate(data.size, (index) {
-                              Map<String, Object?> json = data.docs[index].data() as Map<String, Object?>;
-                              Product product = Product.fromJson(json);
-                              product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
-                              DocumentReference brand = json['brand'] as DocumentReference;
-                              return ProductWidget(
-                                product: product,
-                                brand: brand,
-                                onWishlist: (productId) => onWishlist(product),
-                              );
-                            }),
+                      final data = snapshot.requireData;
+
+                      if (data.size == 0) {
+                        return const Center(
+                          child: Text(
+                            'No products found',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        );
+                      }
+
+                      return GridView.count(
+                        controller: controller,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 30,
+                        childAspectRatio: .68,
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        children: data.docs.map((doc) {
+                          Map<String, Object?> json = doc.data() as Map<String, Object?>;
+                          Product product = Product.fromJson(json);
+                          product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
+                          DocumentReference brand = json['brand'] as DocumentReference;
+
+                          return ProductWidget(
+                            product: product,
+                            brand: brand,
+                            onWishlist: (productId) => onWishlist(product),
                           );
-                        });
-                  }),
+                        }).toList(),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

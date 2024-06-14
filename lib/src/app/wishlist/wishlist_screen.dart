@@ -17,6 +17,7 @@ class WishlistScreen extends StatefulWidget {
 
 class _WishlistScreenState extends State<WishlistScreen> {
   final firebaseService = getIt<FirebaseService>();
+  bool isRetrying = false;
 
   Future onWishlist(Product product) async {
     if (product.isBookmarked) {
@@ -36,6 +37,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
         },
       );
     }
+  }
+
+  void retryFetch() {
+    setState(() {
+      isRetrying = true;
+    });
   }
 
   @override
@@ -64,10 +71,18 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   ),
                   builder: (context, userSnapshot) {
                     if (userSnapshot.hasError) {
-                      return const Center(child: Text('Something went wrong'));
+                      return Column(
+                        children: [
+                          Text('Error: ${userSnapshot.error}'),
+                          ElevatedButton(
+                            onPressed: retryFetch,
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      );
                     }
 
-                    if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    if (userSnapshot.connectionState == ConnectionState.waiting || isRetrying) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
@@ -84,10 +99,18 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       future: Future.wait(user.wishlist.map((productId) => firebaseService.getDocument(collection: 'products', docId: productId))),
                       builder: (context, productsSnapshot) {
                         if (productsSnapshot.hasError) {
-                          return const Center(child: Text('Something went wrong'));
+                          return Column(
+                            children: [
+                              Text('Error: ${userSnapshot.error}'),
+                              ElevatedButton(
+                                onPressed: retryFetch,
+                                child: const Text('Retry'),
+                              ),
+                            ],
+                          );
                         }
 
-                        if (productsSnapshot.connectionState == ConnectionState.waiting) {
+                        if (productsSnapshot.connectionState == ConnectionState.waiting || isRetrying) {
                           return const Center(child: CircularProgressIndicator());
                         }
 
