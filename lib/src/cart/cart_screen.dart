@@ -19,6 +19,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final firebaseService = getIt<FirebaseService>();
+  List<Cart> cartItems = [];
   final ValueNotifier<double> grandTotalNotifier = ValueNotifier<double>(0);
   bool isRetrying = false;
 
@@ -49,7 +50,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 if (grandTotal > 0)
                   ElevatedButton(
-                    onPressed: () => context.router.push(const CheckoutRoute()),
+                    onPressed: () => context.router.push(CheckoutRoute(cart: cartItems)),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
                       child: Text('CHECK OUT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
@@ -93,12 +94,13 @@ class _CartScreenState extends State<CartScreen> {
                 );
               }
               double total = 0;
-              List<Cart> cartItems = data.docs.map((doc) {
+              cartItems = data.docs.map((doc) {
                 Cart cart = Cart.fromJson(doc.data() as Map<String, Object?>);
                 cart = cart.copyWith(id: doc.id);
                 total += (cart.quantity * cart.itemPrice);
                 return cart;
               }).toList();
+
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 grandTotalNotifier.value = total;
               });

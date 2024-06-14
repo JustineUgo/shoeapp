@@ -9,9 +9,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i11;
-import 'package:flutter/material.dart' as _i12;
-import 'package:shoesly/models/brand/brand.dart' as _i14;
-import 'package:shoesly/models/product/product.dart' as _i13;
+import 'package:flutter/cupertino.dart' as _i12;
+import 'package:flutter/material.dart' as _i14;
+import 'package:shoesly/models/brand/brand.dart' as _i16;
+import 'package:shoesly/models/cart/cart.dart' as _i13;
+import 'package:shoesly/models/product/product.dart' as _i15;
 import 'package:shoesly/src/app/app.dart' as _i1;
 import 'package:shoesly/src/app/home/discovery/discovery_screen.dart' as _i5;
 import 'package:shoesly/src/app/home/filter/filter_screen.dart' as _i6;
@@ -47,9 +49,13 @@ abstract class $ShoeslyRouter extends _i11.RootStackRouter {
       );
     },
     CheckoutRoute.name: (routeData) {
+      final args = routeData.argsAs<CheckoutRouteArgs>();
       return _i11.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i4.CheckoutScreen(),
+        child: _i4.CheckoutScreen(
+          key: args.key,
+          cart: args.cart,
+        ),
       );
     },
     DiscoveryRoute.name: (routeData) {
@@ -140,16 +146,40 @@ class CartRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.CheckoutScreen]
-class CheckoutRoute extends _i11.PageRouteInfo<void> {
-  const CheckoutRoute({List<_i11.PageRouteInfo>? children})
-      : super(
+class CheckoutRoute extends _i11.PageRouteInfo<CheckoutRouteArgs> {
+  CheckoutRoute({
+    _i12.Key? key,
+    required List<_i13.Cart> cart,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
           CheckoutRoute.name,
+          args: CheckoutRouteArgs(
+            key: key,
+            cart: cart,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'CheckoutRoute';
 
-  static const _i11.PageInfo<void> page = _i11.PageInfo<void>(name);
+  static const _i11.PageInfo<CheckoutRouteArgs> page =
+      _i11.PageInfo<CheckoutRouteArgs>(name);
+}
+
+class CheckoutRouteArgs {
+  const CheckoutRouteArgs({
+    this.key,
+    required this.cart,
+  });
+
+  final _i12.Key? key;
+
+  final List<_i13.Cart> cart;
+
+  @override
+  String toString() {
+    return 'CheckoutRouteArgs{key: $key, cart: $cart}';
+  }
 }
 
 /// generated route for
@@ -198,9 +228,9 @@ class OrderRoute extends _i11.PageRouteInfo<void> {
 /// [_i8.ProductScreen]
 class ProductRoute extends _i11.PageRouteInfo<ProductRouteArgs> {
   ProductRoute({
-    _i12.Key? key,
-    required _i13.Product product,
-    required _i14.Brand brand,
+    _i14.Key? key,
+    required _i15.Product product,
+    required _i16.Brand brand,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           ProductRoute.name,
@@ -225,11 +255,11 @@ class ProductRouteArgs {
     required this.brand,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.Product product;
+  final _i15.Product product;
 
-  final _i14.Brand brand;
+  final _i16.Brand brand;
 
   @override
   String toString() {

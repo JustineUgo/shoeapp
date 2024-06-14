@@ -1,18 +1,34 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shoesly/models/cart/cart.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 
 @RoutePage()
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  const CheckoutScreen({super.key, required this.cart});
+  final List<Cart> cart;
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  double subtotal = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.cart
+          .map((item) => setState(() {
+                subtotal += item.itemPrice * item.quantity;
+              }))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ShoeslyBackground(
@@ -26,7 +42,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               Text('Grand Total', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
               const SizedBox(height: 5),
-              const Text('\$705.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+              Text('\$${subtotal + 20}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
           ElevatedButton(
@@ -41,23 +57,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         const SizedBox(height: 30),
         const Text('Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 20),
-        InformationTile(),
+        const InformationTile(text: 'Payment Method', value: 'Credit Card'),
         const Divider(),
         const SizedBox(height: 20),
-        InformationTile(),
+        const InformationTile(text: 'Location', value: 'Semarang, Indonesia'),
         const SizedBox(height: 30),
         const Text('Order Detail', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        DetailTile(),
-        DetailTile(),
-        DetailTile(),
+        ...widget.cart.map((item) {
+          return DetailTile(item: item);
+        }),
         const SizedBox(height: 30),
         const Text('Payment Detail', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 20),
-        PaymentTile(),
-        PaymentTile(),
+        PaymentTile(text: 'Sub Total', amount: subtotal),
+        const PaymentTile(text: 'Shipping', amount: 20),
         const Divider(),
         const SizedBox(height: 20),
-        PaymentTile(isTotal: true),
+        PaymentTile(text: 'Total Order', amount: subtotal + 20, isTotal: true),
         const SizedBox(height: 30),
       ],
     );
@@ -65,8 +81,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 }
 
 class PaymentTile extends StatelessWidget {
-  const PaymentTile({super.key, this.isTotal = false});
+  const PaymentTile({super.key, this.isTotal = false, required this.text, required this.amount});
   final bool isTotal;
+  final String text;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +93,9 @@ class PaymentTile extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Sub Total', style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
-            if (!isTotal) const Text('\$705.00', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            if (isTotal) const Text('\$705.00', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(text, style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
+            if (!isTotal) Text('\$$amount', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            if (isTotal) Text('\$$amount.00', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 20),
@@ -87,10 +105,8 @@ class PaymentTile extends StatelessWidget {
 }
 
 class DetailTile extends StatelessWidget {
-  const DetailTile({
-    super.key,
-  });
-
+  const DetailTile({super.key, required this.item});
+  final Cart item;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -99,13 +115,13 @@ class DetailTile extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Jordan 1 Retro High Tie Dye', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+            Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Nike . Red Grey . 40 . Qty 1', style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
-                const Text('\$235,00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text('${item.brand} . ${item.color} . ${item.size} . Qty ${item.quantity}', style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
+                Text('\$${item.quantity * item.itemPrice}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
               ],
             ),
           ],
@@ -118,8 +134,11 @@ class DetailTile extends StatelessWidget {
 class InformationTile extends StatelessWidget {
   const InformationTile({
     super.key,
+    required this.text,
+    required this.value,
   });
-
+  final String text;
+  final String value;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -130,9 +149,9 @@ class InformationTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Payment Method', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 5),
-                  Text('Credit Card', style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
+                  Text(value, style: TextStyle(fontSize: 14, color: ShoeslyColors.grey)),
                 ],
               ),
             ),

@@ -62,6 +62,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 'size': size,
                 'brand': widget.brand.name,
                 'itemPrice': widget.product.amount,
+                'name': widget.product.name,
               }).onError((error, stackTrace) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Failed to add product to cart')),

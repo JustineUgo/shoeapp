@@ -7,6 +7,7 @@ part 'cart.g.dart';
 class Cart with _$Cart {
   const factory Cart({
     String? id,
+    required String name,
     required String userId,
     required String productId,
     required int quantity,
