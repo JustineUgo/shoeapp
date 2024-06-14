@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/cart/cart.dart';
+import 'package:shoesly/services/firebase_service.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 
@@ -15,6 +17,7 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  final firebaseService = getIt<FirebaseService>();
   double subtotal = 0;
 
   @override
@@ -46,7 +49,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ],
           ),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () => firebaseService.createDocument(collection: 'orders', userData: {
+                    'quantity': widget.cart.length,
+                    'status': 'shipping',
+                    'total': subtotal + 20,
+                    'userId': firebaseService.getUserId(),
+                  }).then((value) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Checkout Successful!')),
+                    );
+                    context.router.replaceNamed('/discovery/order');
+                  }),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
                 child: Text('PAYMENT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
