@@ -17,6 +17,27 @@ class WishlistScreen extends StatefulWidget {
 
 class _WishlistScreenState extends State<WishlistScreen> {
   final firebaseService = getIt<FirebaseService>();
+
+  Future onWishlist(Product product) async {
+    if (product.isBookmarked) {
+      return await firebaseService.updateDocument(
+        collection: 'users',
+        docId: firebaseService.getUserId(),
+        userData: {
+          'wishlist': FieldValue.arrayRemove([product.id])
+        },
+      );
+    } else {
+      return await firebaseService.updateDocument(
+        collection: 'users',
+        docId: firebaseService.getUserId(),
+        userData: {
+          'wishlist': FieldValue.arrayUnion([product.id])
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +113,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
                             DocumentReference brand = json['brand'] as DocumentReference;
 
-                            return ProductWidget(product: product, brand: brand);
+                            return ProductWidget(
+                              product: product,
+                              brand: brand,
+                              onWishlist: (productId) => onWishlist(product),
+                            );
                           },
                         );
                       },

@@ -32,6 +32,26 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     super.dispose();
   }
 
+  Future onWishlist(Product product) async {
+    if (product.isBookmarked) {
+      return await firebaseService.updateDocument(
+        collection: 'users',
+        docId: firebaseService.getUserId(),
+        userData: {
+          'wishlist': FieldValue.arrayRemove([product.id])
+        },
+      );
+    } else {
+      return await firebaseService.updateDocument(
+        collection: 'users',
+        docId: firebaseService.getUserId(),
+        userData: {
+          'wishlist': FieldValue.arrayUnion([product.id])
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,8 +155,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: FutureBuilder<DocumentSnapshot>(
-                  future: firebaseService.getDocument(
+              child: StreamBuilder<DocumentSnapshot>(
+                  stream: firebaseService.getDocumentStream(
                     collection: 'users',
                     docId: firebaseService.getUserId(),
                   ),
@@ -181,7 +201,11 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                               Product product = Product.fromJson(json);
                               product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
                               DocumentReference brand = json['brand'] as DocumentReference;
-                              return ProductWidget(product: product, brand: brand);
+                              return ProductWidget(
+                                product: product,
+                                brand: brand,
+                                onWishlist: (productId) => onWishlist(product),
+                              );
                             }),
                           );
                         });

@@ -3,6 +3,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
@@ -10,9 +11,10 @@ import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
 class ProductWidget extends StatelessWidget {
-  const ProductWidget({super.key, required this.product, required this.brand});
+  const ProductWidget({super.key, required this.product, required this.brand, required this.onWishlist});
   final Product product;
   final DocumentReference brand;
+  final Function(String) onWishlist;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,10 @@ class ProductWidget extends StatelessWidget {
                         return const SizedBox.shrink();
                       }),
                     ),
-                    SvgPicture.asset(product.isBookmarked ? ShoeslyIcons.wishlistSelected : ShoeslyIcons.wishlistIcon),
+                    GestureDetector(
+                      onTap: () => onWishlist(product.id),
+                      child: SvgPicture.asset(product.isBookmarked ? ShoeslyIcons.wishlistSelected : ShoeslyIcons.wishlistIcon),
+                    ),
                   ],
                 ),
                 Image.network(
