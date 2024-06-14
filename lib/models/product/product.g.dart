@@ -18,6 +18,8 @@ _$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
       sizes: (json['sizes'] as List<dynamic>)
           .map((e) => (e as num).toDouble())
           .toList(),
+      colors:
+          (json['colors'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
@@ -30,6 +32,7 @@ Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
       'description': instance.description,
       'gender': _$GenderEnumMap[instance.gender]!,
       'sizes': instance.sizes,
+      'colors': instance.colors,
     };
 
 const _$GenderEnumMap = {

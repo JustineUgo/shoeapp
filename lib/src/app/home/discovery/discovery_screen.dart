@@ -100,7 +100,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                       childAspectRatio: .68,
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       children: List.generate(data.size, (index) {
-                        return ProductWidget(product: Product.fixture());
+                        Product product = Product.fromJson(data.docs[index].data() as Map<String, Object?>);
+                        return ProductWidget(product: product);
                       }),
                     );
                   }),

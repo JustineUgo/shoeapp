@@ -14,6 +14,7 @@ class Product with _$Product {
     required String description,
     required Gender gender,
     required List<double> sizes,
+    required List<String> colors,
 
     //colors, sizes, reviews
   }) = _Product;
@@ -30,6 +31,7 @@ class Product with _$Product {
             "Engineered to crush any movement-based workout, these On sneakers enhance the label's original Cloud sneaker with cutting edge technologies for a pair. ",
         gender: Gender.man,
         sizes: [39, 40, 41, 42],
+        colors: ['red'],
       );
 }
 

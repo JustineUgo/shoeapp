@@ -28,6 +28,7 @@ mixin _$Product {
   String get description => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
   List<double> get sizes => throw _privateConstructorUsedError;
+  List<String> get colors => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +48,8 @@ abstract class $ProductCopyWith<$Res> {
       double amount,
       String description,
       Gender gender,
-      List<double> sizes});
+      List<double> sizes,
+      List<String> colors});
 }
 
 /// @nodoc
@@ -71,6 +73,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? description = null,
     Object? gender = null,
     Object? sizes = null,
+    Object? colors = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -105,6 +108,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.sizes
           : sizes // ignore: cast_nullable_to_non_nullable
               as List<double>,
+      colors: null == colors
+          ? _value.colors
+          : colors // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -124,7 +131,8 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       double amount,
       String description,
       Gender gender,
-      List<double> sizes});
+      List<double> sizes,
+      List<String> colors});
 }
 
 /// @nodoc
@@ -146,6 +154,7 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? description = null,
     Object? gender = null,
     Object? sizes = null,
+    Object? colors = null,
   }) {
     return _then(_$ProductImpl(
       id: null == id
@@ -180,6 +189,10 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value._sizes
           : sizes // ignore: cast_nullable_to_non_nullable
               as List<double>,
+      colors: null == colors
+          ? _value._colors
+          : colors // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -195,8 +208,10 @@ class _$ProductImpl implements _Product {
       required this.amount,
       required this.description,
       required this.gender,
-      required final List<double> sizes})
-      : _sizes = sizes;
+      required final List<double> sizes,
+      required final List<String> colors})
+      : _sizes = sizes,
+        _colors = colors;
 
   factory _$ProductImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductImplFromJson(json);
@@ -223,9 +238,17 @@ class _$ProductImpl implements _Product {
     return EqualUnmodifiableListView(_sizes);
   }
 
+  final List<String> _colors;
+  @override
+  List<String> get colors {
+    if (_colors is EqualUnmodifiableListView) return _colors;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_colors);
+  }
+
   @override
   String toString() {
-    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes)';
+    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes, colors: $colors)';
   }
 
   @override
@@ -241,13 +264,23 @@ class _$ProductImpl implements _Product {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.gender, gender) || other.gender == gender) &&
-            const DeepCollectionEquality().equals(other._sizes, _sizes));
+            const DeepCollectionEquality().equals(other._sizes, _sizes) &&
+            const DeepCollectionEquality().equals(other._colors, _colors));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, image, rating, amount,
-      description, gender, const DeepCollectionEquality().hash(_sizes));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      image,
+      rating,
+      amount,
+      description,
+      gender,
+      const DeepCollectionEquality().hash(_sizes),
+      const DeepCollectionEquality().hash(_colors));
 
   @JsonKey(ignore: true)
   @override
@@ -272,7 +305,8 @@ abstract class _Product implements Product {
       required final double amount,
       required final String description,
       required final Gender gender,
-      required final List<double> sizes}) = _$ProductImpl;
+      required final List<double> sizes,
+      required final List<String> colors}) = _$ProductImpl;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
 
@@ -292,6 +326,8 @@ abstract class _Product implements Product {
   Gender get gender;
   @override
   List<double> get sizes;
+  @override
+  List<String> get colors;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>

@@ -11,7 +11,7 @@ void main()async {
     apiKey: 'AIzaSyB4GkQ8ULMwYiWR4wl_iur7vyDdWtxhbng',
     appId: '1:419855959896:android:a6dd3d0aff403e826b072d',
     messagingSenderId: '',
-    projectId: 'shoesly-e685dp',
+    projectId: 'shoesly-e685d',
     storageBucket: 'shoesly-e685d.appspot.com',
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

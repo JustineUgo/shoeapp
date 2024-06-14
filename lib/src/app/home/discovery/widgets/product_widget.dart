@@ -1,5 +1,3 @@
-
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,8 +31,8 @@ class ProductWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [SvgPicture.asset(ShoeslyIcons.brand), SvgPicture.asset(ShoeslyIcons.wishlistIcon)],
                 ),
-                Image.asset(
-                  ShoeslyImages.shoe,
+                Image.network(
+                  product.image,
                   fit: BoxFit.fitWidth,
                   width: (MediaQuery.of(context).size.width - 75) / 2,
                 ),
@@ -42,21 +40,20 @@ class ProductWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          const Text('Jordan 1 Retro High Tie Dye', style: TextStyle(fontSize: 12)),
+          Text(product.name, style: const TextStyle(fontSize: 12)),
           const SizedBox(height: 5),
           Row(
             children: [
               SvgPicture.asset(ShoeslyIcons.rateIcon),
               const SizedBox(width: 1),
-              const Text('4.5', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+              Text(product.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
               const SizedBox(width: 5),
               Text('(1045 Reviews)', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
             ],
           ),
-          const Text('\$235,00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          Text('\$${product.amount}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         ],
       ),
     );
   }
 }
-
