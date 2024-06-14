@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
@@ -7,8 +10,9 @@ import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
 class ProductWidget extends StatelessWidget {
-  const ProductWidget({super.key, required this.product});
+  const ProductWidget({super.key, required this.product, required this.brand});
   final Product product;
+  final DocumentReference brand;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,20 @@ class ProductWidget extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [SvgPicture.asset(ShoeslyIcons.brand), SvgPicture.asset(ShoeslyIcons.wishlistIcon)],
+                  children: [
+                    FutureBuilder<DocumentSnapshot>(
+                      future: brand.get(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.hasData) {
+                          String file = (snapshot.data!.data() as Map<String, Object?>)['file'] as String;
+                          return SvgPicture.network(file, color: ShoeslyColors.primaryNeutral.shade300);
+                        }
+                        return const SizedBox.shrink();
+                      }),
+                    ),
+                    // SvgPicture.asset(ShoeslyIcons.brand),
+                    SvgPicture.asset(ShoeslyIcons.wishlistIcon),
+                  ],
                 ),
                 Image.network(
                   product.image,

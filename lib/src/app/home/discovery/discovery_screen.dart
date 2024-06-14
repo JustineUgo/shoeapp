@@ -100,8 +100,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                       childAspectRatio: .68,
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       children: List.generate(data.size, (index) {
-                        Product product = Product.fromJson(data.docs[index].data() as Map<String, Object?>);
-                        return ProductWidget(product: product);
+                        Map<String, Object?> json = data.docs[index].data() as Map<String, Object?>;
+                        Product product = Product.fromJson(json);
+                        DocumentReference brand = json['brand'] as DocumentReference;
+                        return ProductWidget(product: product, brand: brand);
                       }),
                     );
                   }),
