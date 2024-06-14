@@ -10,6 +10,7 @@ abstract class FirebaseService {
   Future<void> updateDocument({required String collection, required String docId, required Map<String, dynamic> userData});
   Future<void> deleteDocument({required String collection, required String docId});
   Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, DocumentReference? ref});
+  Stream<DocumentSnapshot> getDocumentStream({required String collection, required String docId});
   String getUserId();
 }
 
@@ -45,6 +46,11 @@ class FirebaseServiceImpl implements FirebaseService {
     return ref != null && filterField != null
         ? firestore.collection(collection).where(filterField, isEqualTo: ref).snapshots()
         : firestore.collection(collection).snapshots();
+  }
+
+  @override
+  Stream<DocumentSnapshot> getDocumentStream({required String collection, required String docId}) {
+    return firestore.collection(collection).doc(docId).snapshots();
   }
 
   @override
