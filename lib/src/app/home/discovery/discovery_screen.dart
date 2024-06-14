@@ -2,8 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/injection/injection.dart';
+import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
+import 'package:shoesly/services/firestore_service.dart';
 import 'package:shoesly/src/app/home/discovery/widgets/product_widget.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
@@ -18,7 +21,9 @@ class DiscoveryScreen extends StatefulWidget {
 
 class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final ScrollController controller = ScrollController();
-  final CollectionReference products = FirebaseFirestore.instance.collection('products');
+  final firestoreService = getIt<FirestoreService>();
+  BrandSegment segment = BrandSegment.all;
+  String brandFilter = '';
 
   @override
   void dispose() {
@@ -62,25 +67,79 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
               padding: const EdgeInsets.only(left: 30),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: ['All', 'Nike', 'Jordan', 'Adidas', 'Reebok', 'Vans', 'Puma']
-                      .map(
-                        (brand) => Padding(
-                          padding: const EdgeInsets.only(right: 20),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: firestoreService.getCollectionStream(collection: 'brands'),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Padding(
+                          padding: EdgeInsets.only(right: 20),
                           child: Text(
-                            brand,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            'All',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                      )
-                      .toList(),
-                ),
+                        );
+                      }
+                      //TODO: shimmer
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final data = snapshot.requireData;
+                      return Row(
+                        children: [
+                          InkWell(
+                            onTap: () => setState(() => segment = BrandSegment.all),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Text(
+                                'All',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: segment == BrandSegment.all ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade300,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ...data.docs.map(
+                            (doc) {
+                              Brand brand = Brand.fromJson(doc.data() as Map<String, Object?>);
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    segment = BrandSegment.brand;
+                                    brandFilter = doc.id;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Text(
+                                    brand.name,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: (segment != BrandSegment.all && brandFilter == doc.id)
+                                          ? ShoeslyColors.primaryNeutral
+                                          : ShoeslyColors.primaryNeutral.shade300,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    }),
               ),
             ),
             const SizedBox(height: 30),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                  stream: products.snapshots(),
+                  stream: firestoreService.getCollectionStream(
+                    collection: 'products',
+                    filterField: 'brand',
+                    ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return const Center(child: Text('Something went wrong'));
@@ -114,3 +173,5 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     );
   }
 }
+
+enum BrandSegment { all, brand }
