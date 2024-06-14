@@ -65,7 +65,7 @@ class ProductWidget extends StatelessWidget {
                     const SizedBox(width: 1),
                     Text(product.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                     const SizedBox(width: 5),
-                    Text('(1045 Reviews)', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
+                    Text('(${product.reviews.length} Reviews)', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
                   ],
                 ),
                 Text('\$${product.amount}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),

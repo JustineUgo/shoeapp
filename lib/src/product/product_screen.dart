@@ -10,6 +10,7 @@ import 'package:shoesly/src/product/widget/add_to_cart_sheet.dart';
 import 'package:shoesly/src/product/widget/review_tile.dart';
 import 'package:shoesly/src/product/widget/to_cart_sheet.dart';
 import 'package:shoesly/src/shared/background.dart';
+import 'package:shoesly/src/shared/rating_bar.dart';
 import 'package:shoesly/theme/color.dart';
 import 'package:shoesly/util/assets.dart';
 
@@ -187,15 +188,11 @@ class _ProductScreenState extends State<ProductScreen> {
         const SizedBox(height: 10),
         Row(
           children: [
-            SvgPicture.asset(ShoeslyIcons.rateIcon),
-            const SizedBox(width: 5),
-            SvgPicture.asset(ShoeslyIcons.rateIcon),
-            const SizedBox(width: 5),
-            SvgPicture.asset(ShoeslyIcons.rateIcon),
+            RatingBar(rating: widget.product.rating.toInt()),
             const SizedBox(width: 5),
             Text(widget.product.rating.toString(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
             const SizedBox(width: 5),
-            const Text('(1045 Reviews)', style: TextStyle(fontSize: 11)),
+            Text('(${widget.product.reviews.length} Reviews)', style: const TextStyle(fontSize: 11)),
           ],
         ),
         const SizedBox(height: 30),
@@ -218,18 +215,27 @@ class _ProductScreenState extends State<ProductScreen> {
         const SizedBox(height: 10),
         Text(widget.product.description, style: TextStyle(fontSize: 14, color: ShoeslyColors.primaryNeutral.shade400)),
         const SizedBox(height: 30),
-        const Text('Review (1045)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-        const SizedBox(height: 10),
-        ...List.generate(3, (index) => const ReviewTile()),
-        TextButton(
-          onPressed: () => context.router.push(const ReviewRoute()),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        if (widget.product.reviews.isNotEmpty)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('SEE ALL REVIEW', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Text('Review (${widget.product.reviews.length})', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              const SizedBox(height: 10),
+              if (widget.product.reviews.length < 3)
+                ...widget.product.reviews.map((review) => ReviewTile(review: review))
+              else
+                ...List.generate(3, (index) => ReviewTile(review: widget.product.reviews[index])),
+              TextButton(
+                onPressed: () => context.router.push(ReviewRoute(reviews: widget.product.reviews)),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('SEE ALL REVIEW', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
       ],
     );
   }

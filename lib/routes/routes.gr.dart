@@ -11,9 +11,10 @@
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/cupertino.dart' as _i12;
 import 'package:flutter/material.dart' as _i14;
-import 'package:shoesly/models/brand/brand.dart' as _i16;
+import 'package:shoesly/models/brand/brand.dart' as _i15;
 import 'package:shoesly/models/cart/cart.dart' as _i13;
-import 'package:shoesly/models/product/product.dart' as _i15;
+import 'package:shoesly/models/product/product.dart' as _i16;
+import 'package:shoesly/models/review/review.dart' as _i17;
 import 'package:shoesly/src/app/app.dart' as _i1;
 import 'package:shoesly/src/app/home/discovery/discovery_screen.dart' as _i5;
 import 'package:shoesly/src/app/home/filter/filter_screen.dart' as _i6;
@@ -65,9 +66,13 @@ abstract class $ShoeslyRouter extends _i11.RootStackRouter {
       );
     },
     FilterRoute.name: (routeData) {
+      final args = routeData.argsAs<FilterRouteArgs>();
       return _i11.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i6.FilterScreen(),
+        child: _i6.FilterScreen(
+          key: args.key,
+          brands: args.brands,
+        ),
       );
     },
     OrderRoute.name: (routeData) {
@@ -88,9 +93,13 @@ abstract class $ShoeslyRouter extends _i11.RootStackRouter {
       );
     },
     ReviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ReviewRouteArgs>();
       return _i11.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i9.ReviewScreen(),
+        child: _i9.ReviewScreen(
+          key: args.key,
+          reviews: args.reviews,
+        ),
       );
     },
     WishlistRoute.name: (routeData) {
@@ -198,16 +207,40 @@ class DiscoveryRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i6.FilterScreen]
-class FilterRoute extends _i11.PageRouteInfo<void> {
-  const FilterRoute({List<_i11.PageRouteInfo>? children})
-      : super(
+class FilterRoute extends _i11.PageRouteInfo<FilterRouteArgs> {
+  FilterRoute({
+    _i14.Key? key,
+    required List<_i15.Brand> brands,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
           FilterRoute.name,
+          args: FilterRouteArgs(
+            key: key,
+            brands: brands,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'FilterRoute';
 
-  static const _i11.PageInfo<void> page = _i11.PageInfo<void>(name);
+  static const _i11.PageInfo<FilterRouteArgs> page =
+      _i11.PageInfo<FilterRouteArgs>(name);
+}
+
+class FilterRouteArgs {
+  const FilterRouteArgs({
+    this.key,
+    required this.brands,
+  });
+
+  final _i14.Key? key;
+
+  final List<_i15.Brand> brands;
+
+  @override
+  String toString() {
+    return 'FilterRouteArgs{key: $key, brands: $brands}';
+  }
 }
 
 /// generated route for
@@ -229,8 +262,8 @@ class OrderRoute extends _i11.PageRouteInfo<void> {
 class ProductRoute extends _i11.PageRouteInfo<ProductRouteArgs> {
   ProductRoute({
     _i14.Key? key,
-    required _i15.Product product,
-    required _i16.Brand brand,
+    required _i16.Product product,
+    required _i15.Brand brand,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           ProductRoute.name,
@@ -257,9 +290,9 @@ class ProductRouteArgs {
 
   final _i14.Key? key;
 
-  final _i15.Product product;
+  final _i16.Product product;
 
-  final _i16.Brand brand;
+  final _i15.Brand brand;
 
   @override
   String toString() {
@@ -269,16 +302,40 @@ class ProductRouteArgs {
 
 /// generated route for
 /// [_i9.ReviewScreen]
-class ReviewRoute extends _i11.PageRouteInfo<void> {
-  const ReviewRoute({List<_i11.PageRouteInfo>? children})
-      : super(
+class ReviewRoute extends _i11.PageRouteInfo<ReviewRouteArgs> {
+  ReviewRoute({
+    _i14.Key? key,
+    required List<_i17.Review> reviews,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
           ReviewRoute.name,
+          args: ReviewRouteArgs(
+            key: key,
+            reviews: reviews,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ReviewRoute';
 
-  static const _i11.PageInfo<void> page = _i11.PageInfo<void>(name);
+  static const _i11.PageInfo<ReviewRouteArgs> page =
+      _i11.PageInfo<ReviewRouteArgs>(name);
+}
+
+class ReviewRouteArgs {
+  const ReviewRouteArgs({
+    this.key,
+    required this.reviews,
+  });
+
+  final _i14.Key? key;
+
+  final List<_i17.Review> reviews;
+
+  @override
+  String toString() {
+    return 'ReviewRouteArgs{key: $key, reviews: $reviews}';
+  }
 }
 
 /// generated route for

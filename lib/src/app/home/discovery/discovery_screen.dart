@@ -23,6 +23,7 @@ class DiscoveryScreen extends StatefulWidget {
 class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final ScrollController controller = ScrollController();
   final firebaseService = getIt<FirebaseService>();
+  List<Brand> brands = [];
   BrandSegment segment = BrandSegment.all;
   String brandFilter = '';
   bool isRetrying = false;
@@ -59,13 +60,12 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ElevatedButton(
-        onPressed: () => context.router.push(const FilterRoute()),
+        onPressed: () => context.router.push(FilterRoute(brands: brands)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -108,16 +108,17 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                           Text('Error: ${snapshot.error}'),
                           ElevatedButton(
                             onPressed: retryFetch,
-                            child: const  Text('Retry'),
+                            child: const Text('Retry'),
                           ),
                         ],
                       );
                     }
-                    if (snapshot.connectionState == ConnectionState.waiting|| isRetrying) {
+                    if (snapshot.connectionState == ConnectionState.waiting || isRetrying) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
                     final data = snapshot.requireData;
+                    brands = data.docs.map((doc) => Brand.fromJson(doc.data() as Map<String, Object?>)).toList();
                     return Row(
                       children: [
                         InkWell(
@@ -134,13 +135,12 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                             ),
                           ),
                         ),
-                        ...data.docs.map((doc) {
-                          Brand brand = Brand.fromJson(doc.data() as Map<String, Object?>);
+                        ...brands.map((brand) {
                           return InkWell(
                             onTap: () {
                               setState(() {
                                 segment = BrandSegment.brand;
-                                brandFilter = doc.id;
+                                brandFilter = brand.name.toLowerCase();
                               });
                             },
                             child: Padding(
@@ -150,7 +150,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: (segment != BrandSegment.all && brandFilter == doc.id)
+                                  color: (segment != BrandSegment.all && brandFilter == brand.name.toLowerCase())
                                       ? ShoeslyColors.primaryNeutral
                                       : ShoeslyColors.primaryNeutral.shade300,
                                 ),
@@ -176,12 +176,13 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (userSnapshot.hasError) {
-                    return Center(child: Column(
+                    return Center(
+                        child: Column(
                       children: [
                         Text('Error: ${userSnapshot.error}'),
                         ElevatedButton(
                           onPressed: retryFetch,
-                          child: const  Text('Retry'),
+                          child: const Text('Retry'),
                         ),
                       ],
                     ));
@@ -197,7 +198,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                       ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
                     ),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) {return Center(child: Column(
+                      if (snapshot.hasError) {
+                        return Center(
+                            child: Column(
                           children: [
                             Text('Error: ${snapshot.error}'),
                             ElevatedButton(
@@ -207,7 +210,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                           ],
                         ));
                       }
-                      if (snapshot.connectionState == ConnectionState.waiting|| isRetrying) {
+                      if (snapshot.connectionState == ConnectionState.waiting || isRetrying) {
                         return const Center(child: CircularProgressIndicator());
                       }
 

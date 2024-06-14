@@ -31,6 +31,7 @@ mixin _$Product {
   List<String> get colors => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   dynamic get isBookmarked => throw _privateConstructorUsedError;
+  List<Review> get reviews => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -53,7 +54,8 @@ abstract class $ProductCopyWith<$Res> {
       List<double> sizes,
       List<String> colors,
       DateTime createdAt,
-      dynamic isBookmarked});
+      dynamic isBookmarked,
+      List<Review> reviews});
 }
 
 /// @nodoc
@@ -80,6 +82,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? colors = null,
     Object? createdAt = null,
     Object? isBookmarked = freezed,
+    Object? reviews = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -126,6 +129,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.isBookmarked
           : isBookmarked // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      reviews: null == reviews
+          ? _value.reviews
+          : reviews // ignore: cast_nullable_to_non_nullable
+              as List<Review>,
     ) as $Val);
   }
 }
@@ -148,7 +155,8 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       List<double> sizes,
       List<String> colors,
       DateTime createdAt,
-      dynamic isBookmarked});
+      dynamic isBookmarked,
+      List<Review> reviews});
 }
 
 /// @nodoc
@@ -173,6 +181,7 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? colors = null,
     Object? createdAt = null,
     Object? isBookmarked = freezed,
+    Object? reviews = null,
   }) {
     return _then(_$ProductImpl(
       id: null == id
@@ -217,6 +226,10 @@ class __$$ProductImplCopyWithImpl<$Res>
               as DateTime,
       isBookmarked:
           freezed == isBookmarked ? _value.isBookmarked! : isBookmarked,
+      reviews: null == reviews
+          ? _value._reviews
+          : reviews // ignore: cast_nullable_to_non_nullable
+              as List<Review>,
     ));
   }
 }
@@ -235,9 +248,11 @@ class _$ProductImpl implements _Product {
       required final List<double> sizes,
       required final List<String> colors,
       required this.createdAt,
-      this.isBookmarked = false})
+      this.isBookmarked = false,
+      final List<Review> reviews = const []})
       : _sizes = sizes,
-        _colors = colors;
+        _colors = colors,
+        _reviews = reviews;
 
   factory _$ProductImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductImplFromJson(json);
@@ -277,10 +292,18 @@ class _$ProductImpl implements _Product {
   @override
   @JsonKey()
   final dynamic isBookmarked;
+  final List<Review> _reviews;
+  @override
+  @JsonKey()
+  List<Review> get reviews {
+    if (_reviews is EqualUnmodifiableListView) return _reviews;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_reviews);
+  }
 
   @override
   String toString() {
-    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes, colors: $colors, createdAt: $createdAt, isBookmarked: $isBookmarked)';
+    return 'Product(id: $id, name: $name, image: $image, rating: $rating, amount: $amount, description: $description, gender: $gender, sizes: $sizes, colors: $colors, createdAt: $createdAt, isBookmarked: $isBookmarked, reviews: $reviews)';
   }
 
   @override
@@ -301,7 +324,8 @@ class _$ProductImpl implements _Product {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             const DeepCollectionEquality()
-                .equals(other.isBookmarked, isBookmarked));
+                .equals(other.isBookmarked, isBookmarked) &&
+            const DeepCollectionEquality().equals(other._reviews, _reviews));
   }
 
   @JsonKey(ignore: true)
@@ -318,7 +342,8 @@ class _$ProductImpl implements _Product {
       const DeepCollectionEquality().hash(_sizes),
       const DeepCollectionEquality().hash(_colors),
       createdAt,
-      const DeepCollectionEquality().hash(isBookmarked));
+      const DeepCollectionEquality().hash(isBookmarked),
+      const DeepCollectionEquality().hash(_reviews));
 
   @JsonKey(ignore: true)
   @override
@@ -346,7 +371,8 @@ abstract class _Product implements Product {
       required final List<double> sizes,
       required final List<String> colors,
       required final DateTime createdAt,
-      final dynamic isBookmarked}) = _$ProductImpl;
+      final dynamic isBookmarked,
+      final List<Review> reviews}) = _$ProductImpl;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
 
@@ -372,6 +398,8 @@ abstract class _Product implements Product {
   DateTime get createdAt;
   @override
   dynamic get isBookmarked;
+  @override
+  List<Review> get reviews;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>

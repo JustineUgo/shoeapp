@@ -1,5 +1,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shoesly/models/review/review.dart';
 
 part 'product.freezed.dart';
 part 'product.g.dart';
@@ -17,7 +18,8 @@ class Product with _$Product {
     required List<double> sizes,
     required List<String> colors,
     required DateTime createdAt,
-    @Default(false) isBookmarked, 
+    @Default(false) isBookmarked,
+    @Default([]) List<Review> reviews, 
 
     //colors, sizes, reviews
   }) = _Product;

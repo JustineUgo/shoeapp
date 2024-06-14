@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/order/order.dart';
 import 'package:shoesly/services/firebase_service.dart';
+import 'package:shoesly/theme/color.dart';
 
 @RoutePage()
 class OrderScreen extends StatefulWidget {
@@ -77,11 +78,19 @@ class _OrderScreenState extends State<OrderScreen> {
                             Ordered order = Ordered.fromJson(doc.data() as Map<String, Object?>);
                             return Column(
                               children: [
-                                Card(
-                                  child: ListTile(
-                                    trailing: Text(order.total.toString()),
-                                    title: Text('Qty ${order.quantity}'),
-                                    subtitle: Text(order.status),
+                                ListTile(
+                                  trailing: Text('\$${order.total}'),
+                                  title: Text('Qty ${order.quantity}'),
+                                  subtitle: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(color: ShoeslyColors.warning.shade100, borderRadius: BorderRadius.circular(20)),
+                                          child: Text(
+                                            order.status.toUpperCase(),
+                                            style: const TextStyle(color: ShoeslyColors.warning),
+                                          )),
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(height: 10),

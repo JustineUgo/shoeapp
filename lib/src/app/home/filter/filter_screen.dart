@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 
 @RoutePage()
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key});
+  const FilterScreen({super.key, required this.brands});
+  final List<Brand> brands;
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -29,20 +32,32 @@ class _FilterScreenState extends State<FilterScreen> {
         const SizedBox(height: 20),
         const Text('Brands', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 20),
-        Column(
-          children: [
-            Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: ShoeslyColors.primaryNeutral.shade100,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text('Puma', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            Text('1001 Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
-          ],
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: widget.brands
+                .map((brand) => Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: ShoeslyColors.primaryNeutral.shade100,
+                            ),
+                            child: SvgPicture.network(brand.file),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(brand.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text('1001 Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
         ),
         const SizedBox(height: 30),
         const Text('Price Range', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),

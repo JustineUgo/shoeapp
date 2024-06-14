@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/models/review/review.dart';
+import 'package:shoesly/src/shared/rating_bar.dart';
 import 'package:shoesly/theme/color.dart';
-import 'package:shoesly/util/assets.dart';
 
 class ReviewTile extends StatelessWidget {
-  const ReviewTile({super.key});
-
+  const ReviewTile({super.key, required this.review});
+  final Review review;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -13,7 +13,7 @@ class ReviewTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(),
+          CircleAvatar(backgroundImage: NetworkImage(review.image)),
           const SizedBox(width: 15),
           Expanded(
             child: Column(
@@ -22,21 +22,14 @@ class ReviewTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Nolan Carder', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    Text(review.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                     Text('Today', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
                   ],
                 ),
                 const SizedBox(height: 5),
-                Row(
-                  children: List.generate(
-                      5,
-                      (index) => Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: SvgPicture.asset(ShoeslyIcons.rateIcon),
-                          )),
-                ),
+                RatingBar(rating: review.rating),
                 const SizedBox(height: 10),
-                const Text('Perfect for keeping your feet dry and warm in damp conditions. ', style: TextStyle(fontSize: 12)),
+                Text(review.text, style: const TextStyle(fontSize: 12)),
               ],
             ),
           ),
