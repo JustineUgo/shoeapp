@@ -1,5 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/cart/cart.dart';
@@ -127,14 +131,29 @@ class _CartTileState extends State<CartTile> with SingleTickerProviderStateMixin
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        SvgPicture.asset(ShoeslyIcons.cartMinusIcon),
+                                        GestureDetector(
+                                            onTap: () {
+                                              if (widget.cart.quantity > 1) {
+                                                getIt<FirebaseService>().updateDocument(
+                                                    collection: 'cart',
+                                                    docId: widget.cart.id!,
+                                                    userData: widget.cart.copyWith(quantity: widget.cart.quantity - 1).toJson());
+                                              }
+                                            },
+                                            child: SvgPicture.asset(ShoeslyIcons.cartMinusIcon,
+                                                color: widget.cart.quantity > 1 ? ShoeslyColors.primaryNeutral : null)),
                                         const SizedBox(width: 10),
                                         Text(
                                           widget.cart.quantity.toString(),
                                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                         ),
                                         const SizedBox(width: 10),
-                                        SvgPicture.asset(ShoeslyIcons.cartPlusIcon),
+                                        GestureDetector(
+                                            onTap: () => getIt<FirebaseService>().updateDocument(
+                                                collection: 'cart',
+                                                docId: widget.cart.id!,
+                                                userData: widget.cart.copyWith(quantity: widget.cart.quantity + 1).toJson()),
+                                            child: SvgPicture.asset(ShoeslyIcons.cartPlusIcon)),
                                       ],
                                     ),
                                   ],

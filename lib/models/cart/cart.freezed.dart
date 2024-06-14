@@ -20,6 +20,7 @@ Cart _$CartFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Cart {
+  String? get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get productId => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $CartCopyWith<$Res> {
       _$CartCopyWithImpl<$Res, Cart>;
   @useResult
   $Res call(
-      {String userId,
+      {String? id,
+      String userId,
       String productId,
       int quantity,
       int size,
@@ -61,6 +63,7 @@ class _$CartCopyWithImpl<$Res, $Val extends Cart>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? userId = null,
     Object? productId = null,
     Object? quantity = null,
@@ -70,6 +73,10 @@ class _$CartCopyWithImpl<$Res, $Val extends Cart>
     Object? itemPrice = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -110,7 +117,8 @@ abstract class _$$CartImplCopyWith<$Res> implements $CartCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String userId,
+      {String? id,
+      String userId,
       String productId,
       int quantity,
       int size,
@@ -129,6 +137,7 @@ class __$$CartImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? userId = null,
     Object? productId = null,
     Object? quantity = null,
@@ -138,6 +147,10 @@ class __$$CartImplCopyWithImpl<$Res>
     Object? itemPrice = null,
   }) {
     return _then(_$CartImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -174,7 +187,8 @@ class __$$CartImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CartImpl implements _Cart {
   const _$CartImpl(
-      {required this.userId,
+      {this.id,
+      required this.userId,
       required this.productId,
       required this.quantity,
       required this.size,
@@ -185,6 +199,8 @@ class _$CartImpl implements _Cart {
   factory _$CartImpl.fromJson(Map<String, dynamic> json) =>
       _$$CartImplFromJson(json);
 
+  @override
+  final String? id;
   @override
   final String userId;
   @override
@@ -202,7 +218,7 @@ class _$CartImpl implements _Cart {
 
   @override
   String toString() {
-    return 'Cart(userId: $userId, productId: $productId, quantity: $quantity, size: $size, color: $color, brand: $brand, itemPrice: $itemPrice)';
+    return 'Cart(id: $id, userId: $userId, productId: $productId, quantity: $quantity, size: $size, color: $color, brand: $brand, itemPrice: $itemPrice)';
   }
 
   @override
@@ -210,6 +226,7 @@ class _$CartImpl implements _Cart {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CartImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.productId, productId) ||
                 other.productId == productId) &&
@@ -224,8 +241,8 @@ class _$CartImpl implements _Cart {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, userId, productId, quantity, size, color, brand, itemPrice);
+  int get hashCode => Object.hash(runtimeType, id, userId, productId, quantity,
+      size, color, brand, itemPrice);
 
   @JsonKey(ignore: true)
   @override
@@ -243,7 +260,8 @@ class _$CartImpl implements _Cart {
 
 abstract class _Cart implements Cart {
   const factory _Cart(
-      {required final String userId,
+      {final String? id,
+      required final String userId,
       required final String productId,
       required final int quantity,
       required final int size,
@@ -253,6 +271,8 @@ abstract class _Cart implements Cart {
 
   factory _Cart.fromJson(Map<String, dynamic> json) = _$CartImpl.fromJson;
 
+  @override
+  String? get id;
   @override
   String get userId;
   @override

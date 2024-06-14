@@ -32,33 +32,32 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return ShoeslyBackground(
       title: 'Cart',
-      footer: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Grand Total', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
-              const SizedBox(height: 5),
-              // Text('\$$grandTotal', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
-              ValueListenableBuilder<double>(
-                valueListenable: grandTotalNotifier,
-                builder: (context, grandTotal, child) {
-                  return Text('\$$grandTotal', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
-                },
-              ),
-            ],
-          ),
-          ElevatedButton(
-            onPressed: () => context.router.push(const CheckoutRoute()),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
-              child: Text('CHECK OUT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            ),
-          )
-        ],
-      ),
+      footer: ValueListenableBuilder<double>(
+          valueListenable: grandTotalNotifier,
+          builder: (context, grandTotal, child) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Grand Total', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
+                    const SizedBox(height: 5),
+                    Text('\$$grandTotal', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                if (grandTotal > 0)
+                  ElevatedButton(
+                    onPressed: () => context.router.push(const CheckoutRoute()),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+                      child: Text('CHECK OUT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    ),
+                  )
+              ],
+            );
+          }),
       content: [
         const SizedBox(height: 30),
         StreamBuilder<QuerySnapshot>(
@@ -83,9 +82,12 @@ class _CartScreenState extends State<CartScreen> {
               final data = cartSnapshot.requireData;
 
               if (data.size == 0) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  grandTotalNotifier.value = 0;
+                });
                 return const Center(
                   child: Text(
-                    'No items in cart',
+                    'No item in cart',
                     style: TextStyle(fontSize: 18),
                   ),
                 );
@@ -93,6 +95,7 @@ class _CartScreenState extends State<CartScreen> {
               double total = 0;
               List<Cart> cartItems = data.docs.map((doc) {
                 Cart cart = Cart.fromJson(doc.data() as Map<String, Object?>);
+                cart = cart.copyWith(id: doc.id);
                 total += (cart.quantity * cart.itemPrice);
                 return cart;
               }).toList();
@@ -105,7 +108,7 @@ class _CartScreenState extends State<CartScreen> {
                     .map(
                       (item) => Column(
                         children: [
-                          CartTile(onDelete: () {}, cart: item),
+                          CartTile(onDelete: () => firebaseService.deleteDocument(collection: 'cart', docId: item.id!), cart: item),
                           const SizedBox(height: 30),
                         ],
                       ),

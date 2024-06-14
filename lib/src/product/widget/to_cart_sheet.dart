@@ -30,7 +30,7 @@ class ToCartSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 4),
                         child: Text('BACK EXPLORE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),

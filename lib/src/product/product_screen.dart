@@ -26,7 +26,14 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   final firebaseService = getIt<FirebaseService>();
   String? color;
-  int? size;
+  double? size;
+
+  @override
+  void initState() {
+    color = widget.product.colors.first;
+    size = widget.product.sizes.first;
+    super.initState();
+  }
 
   bool isAddingToCart = false;
   void toCart() {
