@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
@@ -17,6 +18,7 @@ class DiscoveryScreen extends StatefulWidget {
 
 class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final ScrollController controller = ScrollController();
+  final CollectionReference products = FirebaseFirestore.instance.collection('products');
 
   @override
   void dispose() {
@@ -77,20 +79,31 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: Scrollbar(
-                controller: controller,
-                child: GridView.count(
-                  controller: controller,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 30,
-                  childAspectRatio: .68,
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  children: List.generate(20, (index) {
-                    return ProductWidget(product: Product.fixture());
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: products.snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Something went wrong'));
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final data = snapshot.requireData;
+
+                    return GridView.count(
+                      controller: controller,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 30,
+                      childAspectRatio: .68,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      children: List.generate(data.size, (index) {
+                        return ProductWidget(product: Product.fixture());
+                      }),
+                    );
                   }),
-                ),
-              ),
             ),
           ],
         ),

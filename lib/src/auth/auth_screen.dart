@@ -1,5 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:shoesly/injection/injection.dart';
+import 'package:shoesly/routes/routes.dart';
+import 'package:shoesly/routes/routes.gr.dart';
+import 'package:shoesly/src/auth/cubit/auth_cubit.dart';
 import 'package:shoesly/util/assets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,6 +16,18 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final cubit = getIt<AuthCubit>();
+  final router = getIt<ShoeslyRouter>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      String? userId = await cubit.load();
+      if (userId != null) context.router.push(const AppRoute());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +45,7 @@ class _AuthScreenState extends State<AuthScreen> {
             const Text('Step into style. Discover your perfect pair today.', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30)),
             const Spacer(),
             TextButton(
-              onPressed: () {},
+              onPressed: () => cubit.googleAuth(),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
