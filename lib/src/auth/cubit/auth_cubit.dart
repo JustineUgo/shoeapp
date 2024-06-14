@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
@@ -7,7 +8,10 @@ import 'package:injectable/injectable.dart';
 @singleton
 class AuthCubit {
   Future<String?> load() async {
-    if (FirebaseAuth.instance.currentUser != null) return FirebaseAuth.instance.currentUser!.uid;
+    if (FirebaseAuth.instance.currentUser != null) {
+      createUserDocumentIfNotExists(FirebaseAuth.instance.currentUser!);
+      return FirebaseAuth.instance.currentUser!.uid;
+    }
     return null;
   }
 
@@ -44,6 +48,21 @@ class AuthCubit {
     } catch (e) {
       print('SignInFailed $e');
       throw Exception('SignInFailed $e');
+    }
+  }
+
+  Future<void> createUserDocumentIfNotExists(User user) async {
+    final DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    final DocumentSnapshot userDocSnapshot = await userDocRef.get();
+    if (!userDocSnapshot.exists) {
+      await userDocRef.set({
+        'name': user.displayName,
+        'email': user.email,
+        'image': user.photoURL,
+        'wishlist': [],
+        'orders': [],
+      });
     }
   }
 }

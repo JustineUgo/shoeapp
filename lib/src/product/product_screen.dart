@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/routes/routes.gr.dart';
@@ -177,7 +176,7 @@ class _ProductScreenState extends State<ProductScreen> {
             children: [
               Text('Price', style: TextStyle(fontSize: 12, color: ShoeslyColors.primaryNeutral.shade300)),
               const SizedBox(height: 5),
-              const Text('\$235.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+              Text('\$${widget.product.amount}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ],
           ),
           ElevatedButton(
@@ -201,7 +200,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 borderRadius: BorderRadius.circular(20),
                 color: ShoeslyColors.primaryNeutral.shade200,
               ),
-              child: Image.asset(ShoeslyImages.shoe),
+              child: Image.network(widget.product.image),
             ),
             Positioned(
               bottom: 10,
@@ -264,7 +263,7 @@ class _ProductScreenState extends State<ProductScreen> {
           ],
         ),
         const SizedBox(height: 30),
-        const Text('Jordan 1 Retro High Tie Dye', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(widget.product.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -274,7 +273,7 @@ class _ProductScreenState extends State<ProductScreen> {
             const SizedBox(width: 5),
             SvgPicture.asset(ShoeslyIcons.rateIcon),
             const SizedBox(width: 5),
-            const Text('4.5', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+            Text(widget.product.rating.toString(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
             const SizedBox(width: 5),
             const Text('(1045 Reviews)', style: TextStyle(fontSize: 11)),
           ],
