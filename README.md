@@ -69,22 +69,6 @@ Additional features:
 - Google/Guest mode: Option to register with google acct. or use the app as a guest.
 
 
-### State Management Approach
-In this project, state management is handled using a combination of StreamBuilder widgets and Firebase streams, along with a dedicated Firebase service file to abstract core authentication and Firestore functions. This approach ensures that the UI stays responsive and up-to-date with real-time data changes from Firebase.
-
-#### Using StreamBuilder and Firebase Streams
-StreamBuilder: This widget is used extensively to listen to real-time updates from Firebase. It rebuilds the UI whenever new data is emitted by the stream, ensuring that the interface always reflects the current state of the data.
-Firebase Streams: Firestore provides real-time data synchronization using streams. By tapping into these streams, the app can automatically update the UI whenever data changes in the Firestore database.
-Firebase Service
-To keep the codebase organized and maintainable, a dedicated Firebase service file (firebase_service.dart) was created. This service handles core authentication and Firestore operations.
-
-#### Why This Approach?
-1. Simplicity: Using StreamBuilder with Firebase streams is straightforward and leverages the reactive programming model provided by Dart and Firebase.
-2. Real-Time Updates: This method allows the app to react to real-time data changes efficiently without needing complex state management solutions.
-3. Separation of Concerns: By encapsulating Firebase-related logic within a service, the codebase remains clean, modular, and easier to manage.
-  
-
-
 ## Some Screenshots
 
 Welcome Page               |  Discovery Page               | Product Page               
