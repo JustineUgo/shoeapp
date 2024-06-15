@@ -152,25 +152,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             height: 20,
                             width: 20,
                             decoration: BoxDecoration(
-                              color: ShoeslyColors.information,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              color: ShoeslyColors.information,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              color: ShoeslyColors.information,
+                              color: ShoeslyColors.primaryNeutral.shade50,
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
@@ -200,13 +182,23 @@ class _ProductScreenState extends State<ProductScreen> {
         const SizedBox(height: 10),
         Row(
           children: widget.product.sizes
-              .map((size) => Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), border: Border.all(color: ShoeslyColors.primaryNeutral.shade200)),
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(right: 15),
-                    child: Text('${size.toInt()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: ShoeslyColors.primaryNeutral.shade400)),
+              .map((value) => GestureDetector(
+                    onTap: () => setState(() => size = value),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: size == value ? ShoeslyColors.primaryNeutral : null,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: ShoeslyColors.primaryNeutral.shade200)),
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(right: 15),
+                      child: Text('${value.toInt()}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: size == value ? ShoeslyColors.primaryNeutral.shade50 : ShoeslyColors.primaryNeutral.shade400)),
+                    ),
                   ))
               .toList(),
         ),
