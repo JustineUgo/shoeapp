@@ -1,11 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/models/filter/filter.dart';
 import 'package:shoesly/models/product/product.dart';
+import 'package:shoesly/services/firebase_service.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
 
@@ -20,6 +23,7 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
+  final firebaseService = getIt<FirebaseService>();
   ProductFilter filter = const ProductFilter();
 
   @override
@@ -30,7 +34,6 @@ class _FilterScreenState extends State<FilterScreen> {
         filter = widget.filter;
       });
     });
-    
   }
 
   @override
@@ -57,11 +60,34 @@ class _FilterScreenState extends State<FilterScreen> {
         const SizedBox(height: 20),
         const Text('Brands', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 20),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: widget.brands
-                .map((brand) => GestureDetector(
+        StreamBuilder<QuerySnapshot>(
+            stream: firebaseService.getCollectionStream(collection: 'products'),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                    child: Column(
+                  children: [
+                    Text('Error: ${snapshot.error}'),
+                    ElevatedButton(
+                      onPressed: () => setState(() {}),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ));
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final data = snapshot.requireData;
+              List brands = data.docs.map((doc) => (((doc.data() as Map<String, Object?>)['brand']) as DocumentReference).id).toList();
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: widget.brands.map((brand) {
+                    int count = brands.where((element) => element == brand.name.toLowerCase()).length;
+                    return GestureDetector(
                       onTap: () => setState(() {
                         filter = filter.toggleBrand(brand);
                       }),
@@ -95,17 +121,15 @@ class _FilterScreenState extends State<FilterScreen> {
                               ],
                             ),
                             Text(brand.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                            Text('1001 Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
+                            Text('$count Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
                           ],
                         ),
                       ),
-                    ))
-                .toList(),
-          ),
-        ),
-        // const SizedBox(height: 30),
-        // const Text('Price Range', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-        // const SizedBox(height: 20),
+                    );
+                  }).toList(),
+                ),
+              );
+            }),
         const SizedBox(height: 30),
         const Text('Sort By', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 20),

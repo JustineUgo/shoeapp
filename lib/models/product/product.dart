@@ -20,6 +20,7 @@ class Product with _$Product {
     required DateTime createdAt,
     @Default(false) isBookmarked,
     @Default([]) List<Review> reviews, 
+    dynamic modifiedBrand,
 
     //colors, sizes, reviews
   }) = _Product;

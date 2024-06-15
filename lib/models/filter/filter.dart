@@ -42,6 +42,10 @@ extension ProductFilterExtensions on ProductFilter {
     return copyWith(brands: updatedBrands);
   }
 
+  ProductFilter removeBrands() {
+    return copyWith(brands: []);
+  }
+
   ProductFilter toggleColor(String selecteColor) {
     return copyWith(color: color == selecteColor ? null : selecteColor);
   }

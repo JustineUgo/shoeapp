@@ -26,6 +26,7 @@ _$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      modifiedBrand: json['modifiedBrand'],
     );
 
 Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
@@ -42,6 +43,7 @@ Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'isBookmarked': instance.isBookmarked,
       'reviews': instance.reviews,
+      'modifiedBrand': instance.modifiedBrand,
     };
 
 const _$GenderEnumMap = {

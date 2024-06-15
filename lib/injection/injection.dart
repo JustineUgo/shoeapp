@@ -11,6 +11,5 @@ final getIt = GetIt.instance;
 void configureDependencies(SharedPreferences sharedPreferences) {
   GetIt.I.registerFactory(() => ShoeslyRouter());
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
-  print("Running Injectable generated code");
   getIt.init();
 }

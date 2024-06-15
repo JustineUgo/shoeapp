@@ -26,8 +26,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
   final firebaseService = getIt<FirebaseService>();
   ProductFilter filter = const ProductFilter();
   List<Brand> brands = [];
-  BrandSegment segment = BrandSegment.all;
-  String brandFilter = '';
+  // BrandSegment segment = BrandSegment.all;
+  // String brandFilter = '';
   bool isRetrying = false;
 
   @override
@@ -116,76 +116,70 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            if (filter.types() == 0)
-              Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: firebaseService.getCollectionStream(collection: 'brands'),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Column(
-                          children: [
-                            Text('Error: ${snapshot.error}'),
-                            ElevatedButton(
-                              onPressed: retryFetch,
-                              child: const Text('Retry'),
-                            ),
-                          ],
-                        );
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting || isRetrying) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      final data = snapshot.requireData;
-                      brands = data.docs.map((doc) => Brand.fromJson(doc.data() as Map<String, Object?>)).toList();
-                      return Row(
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: firebaseService.getCollectionStream(collection: 'brands'),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Column(
                         children: [
-                          InkWell(
-                            onTap: () => setState(() => segment = BrandSegment.all),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Text(
-                                'All',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: segment == BrandSegment.all ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade300,
-                                ),
+                          Text('Error: ${snapshot.error}'),
+                          ElevatedButton(
+                            onPressed: retryFetch,
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      );
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting || isRetrying) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final data = snapshot.requireData;
+                    brands = data.docs.map((doc) => Brand.fromJson(doc.data() as Map<String, Object?>)).toList();
+                    return Row(
+                      children: [
+                        InkWell(
+                          onTap: () => setState(() => filter = filter.removeBrands()),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Text(
+                              'All',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: ((filter.brands ?? []).length == brands.length || (filter.brands ?? []).isEmpty)
+                                    ? ShoeslyColors.primaryNeutral
+                                    : ShoeslyColors.primaryNeutral.shade300,
                               ),
                             ),
                           ),
-                          ...brands.map((brand) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  segment = BrandSegment.brand;
-                                  brandFilter = brand.name.toLowerCase();
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 20),
-                                child: Text(
-                                  brand.name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: (segment != BrandSegment.all && brandFilter == brand.name.toLowerCase())
-                                        ? ShoeslyColors.primaryNeutral
-                                        : ShoeslyColors.primaryNeutral.shade300,
-                                  ),
+                        ),
+                        ...brands.map((brand) {
+                          return InkWell(
+                            onTap: () => setState(() => filter = filter.toggleBrand(brand)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Text(
+                                brand.name,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: (filter.brands ?? []).contains(brand) ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade300,
                                 ),
                               ),
-                            );
-                          }),
-                        ],
-                      );
-                    },
-                  ),
+                            ),
+                          );
+                        }),
+                      ],
+                    );
+                  },
                 ),
               ),
+            ),
             const SizedBox(height: 30),
             Expanded(
               child: StreamBuilder<DocumentSnapshot>(
@@ -214,11 +208,6 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                   ShoeslyUser user = ShoeslyUser.fromJson(userDoc!.data() as Map<String, Object?>);
 
                   return StreamBuilder<QuerySnapshot>(
-                    // stream: firebaseService.getCollectionStream(
-                    //   collection: 'products',
-                    //   filterField: 'brand',
-                    //   ref: segment == BrandSegment.brand ? FirebaseFirestore.instance.collection('brands').doc(brandFilter) : null,
-                    // ),
                     stream: buildFilterProductQuery(filter).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
@@ -247,6 +236,13 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                           ),
                         );
                       }
+                      List<Product> products = data.docs.map((doc) {
+                        Map<String, Object?> json = doc.data() as Map<String, Object?>;
+                        Product product = Product.fromJson(json);
+                        product = product.copyWith(modifiedBrand: json['brand'] as DocumentReference, isBookmarked: user.wishlist.contains(product.id));
+                        return product;
+                      }).toList();
+                      sortCartItems(products, filter.sortBy);
 
                       return GridView.count(
                         controller: controller,
@@ -255,15 +251,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                         mainAxisSpacing: 30,
                         childAspectRatio: .68,
                         padding: const EdgeInsets.symmetric(horizontal: 30),
-                        children: data.docs.map((doc) {
-                          Map<String, Object?> json = doc.data() as Map<String, Object?>;
-                          Product product = Product.fromJson(json);
-                          product = product.copyWith(isBookmarked: user.wishlist.contains(product.id));
-                          DocumentReference brand = json['brand'] as DocumentReference;
-
+                        children: products.map((product) {
                           return ProductWidget(
                             product: product,
-                            brand: brand,
+                            brand: product.modifiedBrand as DocumentReference,
                             onWishlist: (productId) => onWishlist(product),
                           );
                         }).toList(),
@@ -302,24 +293,21 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     return query;
   }
 
-  // List<Cart> sortCartItems(List<Cart> items, SortBy sortBy) {
-  //   switch (sortBy) {
-  //     case SortBy.mostRecent:
-  //       items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  //       break;
-  //     case SortBy.lowestPrice:
-  //       items.sort((a, b) => a.itemPrice.compareTo(b.itemPrice));
-  //       break;
-  //     case SortBy.highestReviews:
-  //       items.sort((a, b) => b.rating.compareTo(a.rating));
-  //       break;
-  //     default:
-  //       // Default sorting (optional)
-  //       items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  //       break;
-  //   }
-  //   return items;
-  // }
+  List<Product> sortCartItems(List<Product> products, SortBy? sortBy) {
+    switch (sortBy) {
+      case SortBy.mostRecent:
+        products.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case SortBy.lowestPrice:
+        products.sort((a, b) => a.amount.compareTo(b.amount));
+        break;
+      case SortBy.highestReviews:
+        products.sort((a, b) => b.reviews.length.compareTo(a.reviews.length));
+        break;
+      default:
+        products;
+        break;
+    }
+    return products;
+  }
 }
-
-enum BrandSegment { all, brand }
