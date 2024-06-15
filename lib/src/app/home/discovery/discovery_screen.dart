@@ -286,10 +286,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     if (filter.maxAmount != null) {
       query = query.where('amount', isLessThanOrEqualTo: filter.maxAmount);
     }
-    
+
     return query;
   }
-
 
   // List<Cart> sortCartItems(List<Cart> items, SortBy sortBy) {
   //   switch (sortBy) {

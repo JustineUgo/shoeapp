@@ -84,7 +84,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return ShoeslyBackground(
       title: '',
-      trailingIcon: GestureDetector(onTap: () => context.router.push(const CartRoute()), child: SvgPicture.asset(ShoeslyIcons.cartIcon)),
+      trailingIcon: IconButton(onPressed: () => context.router.push(const CartRoute()), icon: SvgPicture.asset(ShoeslyIcons.cartIcon)),
       footer: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

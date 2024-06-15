@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 @module
 abstract class ServiceModule {
+
   @singleton
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
 

@@ -20,6 +20,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final firebaseService = getIt<FirebaseService>();
   final router = getIt<ShoeslyRouter>();
+  bool isReging = false;
 
   @override
   void initState() {
@@ -45,32 +46,46 @@ class _AuthScreenState extends State<AuthScreen> {
             const SizedBox(height: 150),
             const Text('Step into style. Discover your perfect pair today.', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30)),
             const Spacer(),
-            TextButton(
-              onPressed: () async {
-                await firebaseService.register();
-                context.router.replaceAll([const AppRoute()]);
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            if (isReging)
+              const Center(child: CircularProgressIndicator())
+            else
+              Column(
                 children: [
-                  Icon(FontAwesomeIcons.google),
-                  SizedBox(width: 20),
-                  Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  TextButton(
+                    onPressed: () async {
+                      setState(() => isReging = true);
+                      await firebaseService.register();
+                      setState(() => isReging = false);
+                      context.router.replaceAll([const AppRoute()]);
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(FontAwesomeIcons.google),
+                        SizedBox(width: 20),
+                        Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('or'),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() => isReging = true);
+                      await firebaseService.register(isGuest: true);
+                      setState(() => isReging = false);
+                      context.router.replaceAll([const AppRoute()]);
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Continue as Guest', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 10),
-            // const Text('or'),
-            // const SizedBox(height: 10),
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   child: const Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Text('Continue as Guest', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            //     ],
-            //   ),
-            // ),
             const SizedBox(height: 50),
           ],
         ),

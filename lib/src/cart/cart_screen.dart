@@ -87,10 +87,7 @@ class _CartScreenState extends State<CartScreen> {
                   grandTotalNotifier.value = 0;
                 });
                 return const Center(
-                  child: Text(
-                    'No item in cart',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: Text('No item in cart'),
                 );
               }
               double total = 0;

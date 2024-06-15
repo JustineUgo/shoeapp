@@ -68,7 +68,6 @@ class _OrderScreenState extends State<OrderScreen> {
                           child: Text(
                             'There are no orders\n Checkout to see your orders!',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18),
                           ),
                         );
                       }
