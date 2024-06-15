@@ -23,6 +23,5 @@ class ShoeslyIcons {
 }
 
 class ShoeslyImages {
-  static const String shoe = 'assets/images/shoe.png';
   static const String icon = 'assets/images/icon.png';
 }

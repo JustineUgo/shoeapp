@@ -85,4 +85,9 @@ To keep the codebase organized and maintainable, a dedicated Firebase service fi
   
 
 
+## Some Screenshots
+
+Welcome Page               |  Discovery Page               | Product Page               
+:-------------------------:|:-------------------------:|:-------------------------:
+
 
