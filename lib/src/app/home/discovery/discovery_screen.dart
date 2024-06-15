@@ -96,9 +96,21 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text('Discover', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                  IconButton(
-                    onPressed: () => context.router.push(const CartRoute()),
-                    icon: SvgPicture.asset(ShoeslyIcons.cartIcon),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          firebaseService.logout();
+                          context.router.replaceAll([const AuthRoute()]);
+                        },
+                        icon: const Icon(Icons.logout),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        onPressed: () => context.router.push(const CartRoute()),
+                        icon: SvgPicture.asset(ShoeslyIcons.cartIcon),
+                      ),
+                    ],
                   ),
                 ],
               ),

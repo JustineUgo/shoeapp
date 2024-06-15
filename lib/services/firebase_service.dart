@@ -18,6 +18,7 @@ abstract class FirebaseService {
   String getUserId();
   bool isRegistered();
   Future<void> register({bool isGuest = false});
+  void logout();
 }
 
 @Singleton(as: FirebaseService)
@@ -70,7 +71,7 @@ class FirebaseServiceImpl implements FirebaseService {
     if (auth.currentUser != null) {
       return auth.currentUser!.uid;
     }
-    return  cache.retrieve(key: CacheService.guestKey);
+    return cache.retrieve(key: CacheService.guestKey);
   }
 
   @override
@@ -118,5 +119,14 @@ class FirebaseServiceImpl implements FirebaseService {
         });
       }
     }
+  }
+
+  @override
+  void logout() {
+    try {
+      cache.cleanStorage();
+      auth.signOut();
+    } catch (e) {}
+
   }
 }
