@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/models/brand/brand.dart';
 import 'package:shoesly/models/filter/filter.dart';
@@ -11,6 +12,7 @@ import 'package:shoesly/models/product/product.dart';
 import 'package:shoesly/services/firebase_service.dart';
 import 'package:shoesly/src/shared/background.dart';
 import 'package:shoesly/theme/color.dart';
+import 'package:shoesly/src/app/home/filter/filter_provider.dart';
 
 @RoutePage()
 class FilterScreen extends StatefulWidget {
@@ -24,20 +26,23 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   final firebaseService = getIt<FirebaseService>();
-  ProductFilter filter = const ProductFilter();
+  Widget brandSection = Container();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        filter = widget.filter;
+        final filterProvider = context.read<FilterProvider>();
+
+        filterProvider.updateFilter(widget.filter);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final filterProvider = Provider.of<FilterProvider>(context);
     return ShoeslyBackground(
       title: 'Filter',
       padding: const EdgeInsets.only(left: 30),
@@ -46,90 +51,72 @@ class _FilterScreenState extends State<FilterScreen> {
         children: [
           Expanded(
               child: TextButton(
-                  onPressed: () => setState(() {
-                        filter = const ProductFilter();
-                      }),
-                  child: Text('Reset (${filter.types()})', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)))),
+                  onPressed: () => filterProvider.updateFilter(const ProductFilter()),
+                  child: Text('Reset (${filterProvider.filter.types()})', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)))),
           const SizedBox(width: 15),
           Expanded(
               child: ElevatedButton(
-                  onPressed: () => context.router.pop(filter), child: const Text('APPLY', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)))),
+                  onPressed: () => context.router.pop(filterProvider.filter),
+                  child: const Text('APPLY', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)))),
         ],
       ),
       content: [
         const SizedBox(height: 20),
         const Text('Brands', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 20),
-        StreamBuilder<QuerySnapshot>(
-            stream: firebaseService.getCollectionStream(collection: 'products'),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                    child: Column(
-                  children: [
-                    Text('Error: ${snapshot.error}'),
-                    ElevatedButton(
-                      onPressed: () => setState(() {}),
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ));
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+        Builder(builder: (context) {
+          FirebaseFirestore.instance.collection('products').get().then((value) {
+            List brands = value.docs.map((doc) => (((doc.data() as Map<String, Object?>)['brand']) as DocumentReference).id).toList();
 
-              final data = snapshot.requireData;
-              List brands = data.docs.map((doc) => (((doc.data() as Map<String, Object?>)['brand']) as DocumentReference).id).toList();
-
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: widget.brands.map((brand) {
-                    int count = brands.where((element) => element == brand.name.toLowerCase()).length;
-                    return GestureDetector(
-                      onTap: () => setState(() {
-                        filter = filter.toggleBrand(brand);
-                      }),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      padding: const EdgeInsets.all(14),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: ShoeslyColors.primaryNeutral.shade100,
-                                      ),
-                                      child: SvgPicture.network(brand.file),
+            brandSection = SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: widget.brands.map((brand) {
+                  int count = brands.where((element) => element == brand.name.toLowerCase()).length;
+                  return GestureDetector(
+                    onTap: () => filterProvider.updateFilter(filterProvider.filter.toggleBrand(brand)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: ShoeslyColors.primaryNeutral.shade100,
                                     ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                                if ((filter.brands ?? []).contains(brand))
-                                  const Positioned(
-                                    bottom: 4,
-                                    right: 0,
-                                    child: Icon(Icons.check_circle),
+                                    child: SvgPicture.network(brand.file),
                                   ),
-                              ],
-                            ),
-                            Text(brand.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                            Text('$count Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
-                          ],
-                        ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                              if ((filterProvider.filter.brands ?? []).contains(brand))
+                                const Positioned(
+                                  bottom: 4,
+                                  right: 0,
+                                  child: Icon(Icons.check_circle),
+                                ),
+                            ],
+                          ),
+                          Text(brand.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text('$count Items', style: TextStyle(fontSize: 11, color: ShoeslyColors.primaryNeutral.shade300)),
+                        ],
                       ),
-                    );
-                  }).toList(),
-                ),
-              );
-            }),
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+            setState(() {});
+          });
+          return brandSection;
+        }),
         const SizedBox(height: 30),
         const Text('Sort By', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 20),
@@ -140,20 +127,33 @@ class _FilterScreenState extends State<FilterScreen> {
               Widget text = Text(sort.displayName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: filter.sortBy == sort
-                    ? ElevatedButton(
-                        onPressed: () => setState(() {
-                              filter = filter.setSortBy(sort);
-                            }),
-                        child: text)
-                    : TextButton(
-                        onPressed: () => setState(() {
-                              filter = filter.setSortBy(sort);
-                            }),
-                        child: text),
+                child: filterProvider.filter.sortBy == sort
+                    ? ElevatedButton(onPressed: () => filterProvider.updateFilter(filterProvider.filter.setSortBy(sort)), child: text)
+                    : TextButton(onPressed: () => filterProvider.updateFilter(filterProvider.filter.setSortBy(sort)), child: text),
               );
             }).toList(),
           ),
+        ),
+        const SizedBox(height: 30),
+        const Text('Price Range', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+        const SizedBox(height: 20),
+        RangeSlider(
+          min: 0,
+          max: 500,
+          divisions: 10,
+          values: filterProvider.currentRangeValues,
+          activeColor: ShoeslyColors.primaryNeutral,
+          labels: RangeLabels(
+            filterProvider.currentRangeValues.start.round().toString(),
+            filterProvider.currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            filterProvider.setCurrentRangeValues(values);
+            filterProvider.updatePriceRange(
+              values.start,
+              values.end,
+            );
+          },
         ),
         const SizedBox(height: 30),
         const Text('Gender', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
@@ -165,17 +165,9 @@ class _FilterScreenState extends State<FilterScreen> {
               Widget text = Text(gender.displayName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: filter.gender == gender
-                    ? ElevatedButton(
-                        onPressed: () => setState(() {
-                              filter = filter.toggleGender(gender);
-                            }),
-                        child: text)
-                    : TextButton(
-                        onPressed: () => setState(() {
-                              filter = filter.toggleGender(gender);
-                            }),
-                        child: text),
+                child: filterProvider.filter.gender == gender
+                    ? ElevatedButton(onPressed: () => filterProvider.updateFilter(filterProvider.filter.toggleGender(gender)), child: text)
+                    : TextButton(onPressed: () => filterProvider.updateFilter(filterProvider.filter.toggleGender(gender)), child: text),
               );
             }).toList(),
           ),
@@ -194,12 +186,12 @@ class _FilterScreenState extends State<FilterScreen> {
                 .map((color) => Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: TextButton(
-                          onPressed: () => setState(() {
-                                filter = filter.toggleColor(color.first.toLowerCase());
-                              }),
+                          onPressed: () => filterProvider.updateFilter(filterProvider.filter.toggleColor(color.first.toLowerCase())),
                           style: ButtonStyle(
                               side: MaterialStateProperty.all(BorderSide(
-                                  color: filter.color == color.first.toLowerCase() ? ShoeslyColors.primaryNeutral : ShoeslyColors.primaryNeutral.shade200))),
+                                  color: filterProvider.filter.color == color.first.toLowerCase()
+                                      ? ShoeslyColors.primaryNeutral
+                                      : ShoeslyColors.primaryNeutral.shade200))),
                           child: Row(
                             children: [
                               Container(

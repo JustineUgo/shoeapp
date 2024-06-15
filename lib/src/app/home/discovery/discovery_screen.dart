@@ -242,7 +242,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                         product = product.copyWith(modifiedBrand: json['brand'] as DocumentReference, isBookmarked: user.wishlist.contains(product.id));
                         return product;
                       }).toList();
-                      sortCartItems(products, filter.sortBy);
+                      products = sortCartItems(products, filter);
 
                       return GridView.count(
                         controller: controller,
@@ -283,18 +283,12 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     if (filter.gender != null) {
       query = query.where('gender', isEqualTo: filter.gender!.name);
     }
-    if (filter.minAmount != null) {
-      query = query.where('amount', isGreaterThanOrEqualTo: filter.minAmount);
-    }
-    if (filter.maxAmount != null) {
-      query = query.where('amount', isLessThanOrEqualTo: filter.maxAmount);
-    }
 
     return query;
   }
 
-  List<Product> sortCartItems(List<Product> products, SortBy? sortBy) {
-    switch (sortBy) {
+  List<Product> sortCartItems(List<Product> products, ProductFilter? filter) {
+    switch (filter?.sortBy) {
       case SortBy.mostRecent:
         products.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
@@ -308,6 +302,14 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         products;
         break;
     }
+    if (filter?.minAmount != null && filter?.maxAmount != null) {
+      products = products.where((product) {
+        bool value = product.amount >= filter!.minAmount! && product.amount <= filter.maxAmount!;
+        value;
+        return value;
+      }).toList();
+    }
+    products;
     return products;
   }
 }
