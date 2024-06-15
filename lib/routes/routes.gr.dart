@@ -13,8 +13,9 @@ import 'package:flutter/cupertino.dart' as _i12;
 import 'package:flutter/material.dart' as _i14;
 import 'package:shoesly/models/brand/brand.dart' as _i15;
 import 'package:shoesly/models/cart/cart.dart' as _i13;
-import 'package:shoesly/models/product/product.dart' as _i16;
-import 'package:shoesly/models/review/review.dart' as _i17;
+import 'package:shoesly/models/filter/filter.dart' as _i16;
+import 'package:shoesly/models/product/product.dart' as _i17;
+import 'package:shoesly/models/review/review.dart' as _i18;
 import 'package:shoesly/src/app/app.dart' as _i1;
 import 'package:shoesly/src/app/home/discovery/discovery_screen.dart' as _i5;
 import 'package:shoesly/src/app/home/filter/filter_screen.dart' as _i6;
@@ -72,6 +73,7 @@ abstract class $ShoeslyRouter extends _i11.RootStackRouter {
         child: _i6.FilterScreen(
           key: args.key,
           brands: args.brands,
+          filter: args.filter,
         ),
       );
     },
@@ -211,12 +213,14 @@ class FilterRoute extends _i11.PageRouteInfo<FilterRouteArgs> {
   FilterRoute({
     _i14.Key? key,
     required List<_i15.Brand> brands,
+    required _i16.ProductFilter filter,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           FilterRoute.name,
           args: FilterRouteArgs(
             key: key,
             brands: brands,
+            filter: filter,
           ),
           initialChildren: children,
         );
@@ -231,15 +235,18 @@ class FilterRouteArgs {
   const FilterRouteArgs({
     this.key,
     required this.brands,
+    required this.filter,
   });
 
   final _i14.Key? key;
 
   final List<_i15.Brand> brands;
 
+  final _i16.ProductFilter filter;
+
   @override
   String toString() {
-    return 'FilterRouteArgs{key: $key, brands: $brands}';
+    return 'FilterRouteArgs{key: $key, brands: $brands, filter: $filter}';
   }
 }
 
@@ -262,7 +269,7 @@ class OrderRoute extends _i11.PageRouteInfo<void> {
 class ProductRoute extends _i11.PageRouteInfo<ProductRouteArgs> {
   ProductRoute({
     _i14.Key? key,
-    required _i16.Product product,
+    required _i17.Product product,
     required _i15.Brand brand,
     List<_i11.PageRouteInfo>? children,
   }) : super(
@@ -290,7 +297,7 @@ class ProductRouteArgs {
 
   final _i14.Key? key;
 
-  final _i16.Product product;
+  final _i17.Product product;
 
   final _i15.Brand brand;
 
@@ -305,7 +312,7 @@ class ProductRouteArgs {
 class ReviewRoute extends _i11.PageRouteInfo<ReviewRouteArgs> {
   ReviewRoute({
     _i14.Key? key,
-    required List<_i17.Review> reviews,
+    required List<_i18.Review> reviews,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           ReviewRoute.name,
@@ -330,7 +337,7 @@ class ReviewRouteArgs {
 
   final _i14.Key? key;
 
-  final List<_i17.Review> reviews;
+  final List<_i18.Review> reviews;
 
   @override
   String toString() {

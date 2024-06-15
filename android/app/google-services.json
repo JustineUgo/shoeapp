@@ -45,6 +45,13 @@
             {
               "client_id": "419855959896-n2p7akv4ot5os8831kuhugktginah42a.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "419855959896-9nfj6u64cc9c2g81gcobetnk4h6o4e3q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.shoesly"
+              }
             }
           ]
         }

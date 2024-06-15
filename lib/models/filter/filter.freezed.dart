@@ -14,14 +14,14 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Filter _$FilterFromJson(Map<String, dynamic> json) {
-  return _Filter.fromJson(json);
+ProductFilter _$ProductFilterFromJson(Map<String, dynamic> json) {
+  return _ProductFilter.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Filter {
+mixin _$ProductFilter {
   List<Brand>? get brands => throw _privateConstructorUsedError;
-  List<String>? get colors => throw _privateConstructorUsedError;
+  String? get color => throw _privateConstructorUsedError;
   double? get maxAmount => throw _privateConstructorUsedError;
   double? get minAmount => throw _privateConstructorUsedError;
   Gender? get gender => throw _privateConstructorUsedError;
@@ -29,17 +29,19 @@ mixin _$Filter {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FilterCopyWith<Filter> get copyWith => throw _privateConstructorUsedError;
+  $ProductFilterCopyWith<ProductFilter> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FilterCopyWith<$Res> {
-  factory $FilterCopyWith(Filter value, $Res Function(Filter) then) =
-      _$FilterCopyWithImpl<$Res, Filter>;
+abstract class $ProductFilterCopyWith<$Res> {
+  factory $ProductFilterCopyWith(
+          ProductFilter value, $Res Function(ProductFilter) then) =
+      _$ProductFilterCopyWithImpl<$Res, ProductFilter>;
   @useResult
   $Res call(
       {List<Brand>? brands,
-      List<String>? colors,
+      String? color,
       double? maxAmount,
       double? minAmount,
       Gender? gender,
@@ -47,9 +49,9 @@ abstract class $FilterCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FilterCopyWithImpl<$Res, $Val extends Filter>
-    implements $FilterCopyWith<$Res> {
-  _$FilterCopyWithImpl(this._value, this._then);
+class _$ProductFilterCopyWithImpl<$Res, $Val extends ProductFilter>
+    implements $ProductFilterCopyWith<$Res> {
+  _$ProductFilterCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -60,7 +62,7 @@ class _$FilterCopyWithImpl<$Res, $Val extends Filter>
   @override
   $Res call({
     Object? brands = freezed,
-    Object? colors = freezed,
+    Object? color = freezed,
     Object? maxAmount = freezed,
     Object? minAmount = freezed,
     Object? gender = freezed,
@@ -71,10 +73,10 @@ class _$FilterCopyWithImpl<$Res, $Val extends Filter>
           ? _value.brands
           : brands // ignore: cast_nullable_to_non_nullable
               as List<Brand>?,
-      colors: freezed == colors
-          ? _value.colors
-          : colors // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
       maxAmount: freezed == maxAmount
           ? _value.maxAmount
           : maxAmount // ignore: cast_nullable_to_non_nullable
@@ -96,15 +98,16 @@ class _$FilterCopyWithImpl<$Res, $Val extends Filter>
 }
 
 /// @nodoc
-abstract class _$$FilterImplCopyWith<$Res> implements $FilterCopyWith<$Res> {
-  factory _$$FilterImplCopyWith(
-          _$FilterImpl value, $Res Function(_$FilterImpl) then) =
-      __$$FilterImplCopyWithImpl<$Res>;
+abstract class _$$ProductFilterImplCopyWith<$Res>
+    implements $ProductFilterCopyWith<$Res> {
+  factory _$$ProductFilterImplCopyWith(
+          _$ProductFilterImpl value, $Res Function(_$ProductFilterImpl) then) =
+      __$$ProductFilterImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {List<Brand>? brands,
-      List<String>? colors,
+      String? color,
       double? maxAmount,
       double? minAmount,
       Gender? gender,
@@ -112,32 +115,32 @@ abstract class _$$FilterImplCopyWith<$Res> implements $FilterCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$FilterImplCopyWithImpl<$Res>
-    extends _$FilterCopyWithImpl<$Res, _$FilterImpl>
-    implements _$$FilterImplCopyWith<$Res> {
-  __$$FilterImplCopyWithImpl(
-      _$FilterImpl _value, $Res Function(_$FilterImpl) _then)
+class __$$ProductFilterImplCopyWithImpl<$Res>
+    extends _$ProductFilterCopyWithImpl<$Res, _$ProductFilterImpl>
+    implements _$$ProductFilterImplCopyWith<$Res> {
+  __$$ProductFilterImplCopyWithImpl(
+      _$ProductFilterImpl _value, $Res Function(_$ProductFilterImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? brands = freezed,
-    Object? colors = freezed,
+    Object? color = freezed,
     Object? maxAmount = freezed,
     Object? minAmount = freezed,
     Object? gender = freezed,
     Object? sortBy = freezed,
   }) {
-    return _then(_$FilterImpl(
+    return _then(_$ProductFilterImpl(
       brands: freezed == brands
           ? _value._brands
           : brands // ignore: cast_nullable_to_non_nullable
               as List<Brand>?,
-      colors: freezed == colors
-          ? _value._colors
-          : colors // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
       maxAmount: freezed == maxAmount
           ? _value.maxAmount
           : maxAmount // ignore: cast_nullable_to_non_nullable
@@ -160,19 +163,18 @@ class __$$FilterImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$FilterImpl implements _Filter {
-  const _$FilterImpl(
+class _$ProductFilterImpl implements _ProductFilter {
+  const _$ProductFilterImpl(
       {final List<Brand>? brands,
-      final List<String>? colors,
+      this.color,
       this.maxAmount,
       this.minAmount,
       this.gender,
       this.sortBy})
-      : _brands = brands,
-        _colors = colors;
+      : _brands = brands;
 
-  factory _$FilterImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FilterImplFromJson(json);
+  factory _$ProductFilterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProductFilterImplFromJson(json);
 
   final List<Brand>? _brands;
   @override
@@ -184,16 +186,8 @@ class _$FilterImpl implements _Filter {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<String>? _colors;
   @override
-  List<String>? get colors {
-    final value = _colors;
-    if (value == null) return null;
-    if (_colors is EqualUnmodifiableListView) return _colors;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  final String? color;
   @override
   final double? maxAmount;
   @override
@@ -205,16 +199,16 @@ class _$FilterImpl implements _Filter {
 
   @override
   String toString() {
-    return 'Filter(brands: $brands, colors: $colors, maxAmount: $maxAmount, minAmount: $minAmount, gender: $gender, sortBy: $sortBy)';
+    return 'ProductFilter(brands: $brands, color: $color, maxAmount: $maxAmount, minAmount: $minAmount, gender: $gender, sortBy: $sortBy)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FilterImpl &&
+            other is _$ProductFilterImpl &&
             const DeepCollectionEquality().equals(other._brands, _brands) &&
-            const DeepCollectionEquality().equals(other._colors, _colors) &&
+            (identical(other.color, color) || other.color == color) &&
             (identical(other.maxAmount, maxAmount) ||
                 other.maxAmount == maxAmount) &&
             (identical(other.minAmount, minAmount) ||
@@ -228,7 +222,7 @@ class _$FilterImpl implements _Filter {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_brands),
-      const DeepCollectionEquality().hash(_colors),
+      color,
       maxAmount,
       minAmount,
       gender,
@@ -237,32 +231,33 @@ class _$FilterImpl implements _Filter {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FilterImplCopyWith<_$FilterImpl> get copyWith =>
-      __$$FilterImplCopyWithImpl<_$FilterImpl>(this, _$identity);
+  _$$ProductFilterImplCopyWith<_$ProductFilterImpl> get copyWith =>
+      __$$ProductFilterImplCopyWithImpl<_$ProductFilterImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FilterImplToJson(
+    return _$$ProductFilterImplToJson(
       this,
     );
   }
 }
 
-abstract class _Filter implements Filter {
-  const factory _Filter(
+abstract class _ProductFilter implements ProductFilter {
+  const factory _ProductFilter(
       {final List<Brand>? brands,
-      final List<String>? colors,
+      final String? color,
       final double? maxAmount,
       final double? minAmount,
       final Gender? gender,
-      final SortBy? sortBy}) = _$FilterImpl;
+      final SortBy? sortBy}) = _$ProductFilterImpl;
 
-  factory _Filter.fromJson(Map<String, dynamic> json) = _$FilterImpl.fromJson;
+  factory _ProductFilter.fromJson(Map<String, dynamic> json) =
+      _$ProductFilterImpl.fromJson;
 
   @override
   List<Brand>? get brands;
   @override
-  List<String>? get colors;
+  String? get color;
   @override
   double? get maxAmount;
   @override
@@ -273,6 +268,6 @@ abstract class _Filter implements Filter {
   SortBy? get sortBy;
   @override
   @JsonKey(ignore: true)
-  _$$FilterImplCopyWith<_$FilterImpl> get copyWith =>
+  _$$ProductFilterImplCopyWith<_$ProductFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

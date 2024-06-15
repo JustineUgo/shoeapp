@@ -29,3 +29,19 @@ class Product with _$Product {
 }
 
 enum Gender { man, woman, unisex }
+
+
+extension GenderExtension on Gender {
+  String get displayName {
+    switch (this) {
+      case Gender.man:
+        return 'Man';
+      case Gender.woman:
+        return 'Woman';
+      case Gender.unisex:
+        return 'Unisex';
+      default:
+        return '';
+    }
+  }
+}

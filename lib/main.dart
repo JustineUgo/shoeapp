@@ -4,16 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:shoesly/injection/injection.dart';
 import 'package:shoesly/routes/routes.dart';
 import 'package:shoesly/theme/theme.dart';
+import 'firebase_options.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: const  FirebaseOptions(
-    apiKey: 'AIzaSyB4GkQ8ULMwYiWR4wl_iur7vyDdWtxhbng',
-    appId: '1:419855959896:android:a6dd3d0aff403e826b072d',
-    messagingSenderId: '',
-    projectId: 'shoesly-e685d',
-    storageBucket: 'shoesly-e685d.appspot.com',
-  ));
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.white, statusBarIconBrightness: Brightness.dark));
   configureDependencies();
