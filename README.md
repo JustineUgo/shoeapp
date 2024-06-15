@@ -89,6 +89,6 @@ To keep the codebase organized and maintainable, a dedicated Firebase service fi
 
 Welcome Page               |  Discovery Page               | Product Page               
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-145943.jpg)|![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-150023.jpg)|![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-150052.jpg)|
+![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-145943.jpg)|![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-175241.jpg)|![](https://github.com/JustineUgo/shoeapp/blob/master/assets/images/screenshots/Screenshot_20240615-150052.jpg)|
 
 
