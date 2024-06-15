@@ -58,6 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Checkout Successful!')),
                     );
+                    firebaseService.deleteUserCartItems(firebaseService.getUserId());
                     context.router.replaceNamed('/discovery/order');
                   }),
               child: const Padding(

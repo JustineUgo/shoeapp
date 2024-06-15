@@ -15,6 +15,7 @@ abstract class FirebaseService {
   Future<void> deleteDocument({required String collection, required String docId});
   Stream<QuerySnapshot> getCollectionStream({required String collection, String? filterField, Object? ref});
   Stream<DocumentSnapshot> getDocumentStream({required String collection, required String docId});
+  Future<void> deleteUserCartItems(String userId);
   String getUserId();
   bool isRegistered();
   Future<void> register({bool isGuest = false});
@@ -126,7 +127,21 @@ class FirebaseServiceImpl implements FirebaseService {
     try {
       cache.cleanStorage();
       auth.signOut();
-    } catch (e) {}
+    } catch (e) {
+      e;
+    }
+  }
 
+  @override
+  Future<void> deleteUserCartItems(String userId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    CollectionReference cartCollection = firestore.collection('cart');
+
+    QuerySnapshot querySnapshot = await cartCollection.where('userId', isEqualTo: userId).get();
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
   }
 }
